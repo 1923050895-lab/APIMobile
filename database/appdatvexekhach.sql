@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 19, 2026 lúc 02:21 PM
+-- Thời gian đã tạo: Th10 22, 2026 lúc 06:09 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -59,20 +59,29 @@ INSERT INTO `chuyenxe` (`MaChuyenXe`, `MaTuyenXe`, `MaXe`, `GioKhoiHanh`, `GioDe
 CREATE TABLE `datve` (
   `MaDatVe` int(11) NOT NULL,
   `MaTaiKhoan` int(11) DEFAULT NULL,
+  `MaChuyenXe` int(11) DEFAULT NULL,
+  `MaXe` int(11) DEFAULT NULL,
+  `MaGhe` int(11) DEFAULT NULL,
   `HoTenNguoiDat` varchar(100) NOT NULL,
   `SoDienThoai` varchar(15) NOT NULL,
   `Email` varchar(150) DEFAULT NULL,
   `NgayDat` datetime NOT NULL DEFAULT current_timestamp(),
-  `TrangThai` enum('DaDat','DaHuy') NOT NULL DEFAULT 'DaDat'
+  `TrangThai` enum('DaDat','DaHuy') NOT NULL DEFAULT 'DaDat',
+  `PhuongThucThanhToan` enum('COD','ChuyenKhoan') NOT NULL DEFAULT 'COD',
+  `TrangThaiThanhToan` enum('ChuaThanhToan','DaThanhToan') NOT NULL DEFAULT 'ChuaThanhToan'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `datve`
 --
 
-INSERT INTO `datve` (`MaDatVe`, `MaTaiKhoan`, `HoTenNguoiDat`, `SoDienThoai`, `Email`, `NgayDat`, `TrangThai`) VALUES
-(1, 1, 'Nguyen Van An', '0901000001', 'an@example.com', '2026-10-15 09:00:00', 'DaDat'),
-(2, 2, 'Tran Thi Binh', '0901000002', 'binh@example.com', '2026-10-15 10:00:00', 'DaDat');
+INSERT INTO `datve` (`MaDatVe`, `MaTaiKhoan`, `MaChuyenXe`, `MaXe`, `MaGhe`, `HoTenNguoiDat`, `SoDienThoai`, `Email`, `NgayDat`, `TrangThai`, `PhuongThucThanhToan`, `TrangThaiThanhToan`) VALUES
+(1, 1, 1, 1, 1, 'Nguyen Van An', '0901000001', 'an@example.com', '2026-10-15 09:00:00', 'DaDat', 'COD', 'DaThanhToan'),
+(2, 2, 1, 1, 2, 'Tran Thi Binh', '0901000002', 'binh@example.com', '2026-10-15 10:00:00', 'DaDat', 'COD', 'DaThanhToan'),
+(4, 3, 1, 1, 5, 'Khach Hang', '0912345678', 'admin@example.com', '2026-10-22 09:19:24', 'DaDat', 'COD', 'DaThanhToan'),
+(5, 3, 1, 1, 10, 'Khach Hang', '0912345678', 'admin@example.com', '2026-10-22 09:23:08', 'DaDat', 'COD', 'DaThanhToan'),
+(6, 3, 1, 1, 12, 'Khach Hang', '0912345678', 'admin@example.com', '2026-10-22 09:26:24', 'DaDat', 'COD', 'DaThanhToan'),
+(7, 3, 1, 1, 11, 'Khach Hang', '0912345678', 'admin@example.com', '2026-10-22 09:27:50', 'DaDat', 'COD', 'DaThanhToan');
 
 -- --------------------------------------------------------
 
@@ -306,7 +315,11 @@ CREATE TABLE `ve` (
 
 INSERT INTO `ve` (`MaVe`, `MaDatVe`, `MaChuyenXe`, `MaXe`, `MaGhe`, `HoTenHanhKhach`, `SoDienThoaiHanhKhach`, `GiaVe`, `TrangThai`) VALUES
 (1, 1, 1, 1, 1, 'Nguyen Van An', '0901000001', 350000.00, 'DaDat'),
-(2, 2, 3, 1, 6, 'Tran Thi Binh', '0901000002', 180000.00, 'DaDat');
+(2, 2, 3, 1, 6, 'Tran Thi Binh', '0901000002', 180000.00, 'DaDat'),
+(4, 4, 1, 1, 76, 'Khach Hang', '0912345678', 350000.00, 'DaDat'),
+(5, 5, 1, 1, 36, 'Khach Hang', '0912345678', 350000.00, 'DaDat'),
+(6, 6, 1, 1, 21, 'Khach Hang', '0912345678', 350000.00, 'DaDat'),
+(7, 7, 1, 1, 51, 'Khach Hang', '0912345678', 350000.00, 'DaDat');
 
 -- --------------------------------------------------------
 
@@ -352,7 +365,10 @@ ALTER TABLE `chuyenxe`
 ALTER TABLE `datve`
   ADD PRIMARY KEY (`MaDatVe`),
   ADD KEY `IX_DatVe_TaiKhoan_NgayDat` (`MaTaiKhoan`,`NgayDat`),
-  ADD KEY `IX_DatVe_SoDienThoai` (`SoDienThoai`);
+  ADD KEY `IX_DatVe_SoDienThoai` (`SoDienThoai`),
+  ADD KEY `FK_DatVe_ChuyenXe` (`MaChuyenXe`),
+  ADD KEY `FK_DatVe_Xe` (`MaXe`),
+  ADD KEY `FK_DatVe_Ghe` (`MaGhe`);
 
 --
 -- Chỉ mục cho bảng `ghe`
@@ -408,7 +424,7 @@ ALTER TABLE `chuyenxe`
 -- AUTO_INCREMENT cho bảng `datve`
 --
 ALTER TABLE `datve`
-  MODIFY `MaDatVe` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `MaDatVe` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `ghe`
@@ -455,7 +471,10 @@ ALTER TABLE `chuyenxe`
 -- Các ràng buộc cho bảng `datve`
 --
 ALTER TABLE `datve`
-  ADD CONSTRAINT `FK_DatVe_TaiKhoan` FOREIGN KEY (`MaTaiKhoan`) REFERENCES `taikhoan` (`MaTaiKhoan`) ON DELETE SET NULL;
+  ADD CONSTRAINT `FK_DatVe_ChuyenXe` FOREIGN KEY (`MaChuyenXe`) REFERENCES `chuyenxe` (`MaChuyenXe`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_DatVe_Ghe` FOREIGN KEY (`MaGhe`) REFERENCES `ghe` (`MaGhe`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_DatVe_TaiKhoan` FOREIGN KEY (`MaTaiKhoan`) REFERENCES `taikhoan` (`MaTaiKhoan`) ON DELETE SET NULL,
+  ADD CONSTRAINT `FK_DatVe_Xe` FOREIGN KEY (`MaXe`) REFERENCES `xe` (`MaXe`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `ghe`

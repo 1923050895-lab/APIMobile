@@ -1,4 +1,3 @@
-
 <?php
 
 session_set_cookie_params([
@@ -71,43 +70,11 @@ try {
 
     $storedPassword = $account['MatKhau'];
     $passwordInfo = password_get_info($storedPassword);
-    $isHashed = ($passwordInfo['algo'] ?? null) !== null;
 
-    if ($isHashed) {
-        // Tai khoan da ma hoa
-        $passwordCorrect = password_verify(
-            $matKhau,
-            $storedPassword
-        );
-    } else {
-        // Tai khoan cu dang luu mat khau chu thuong
-        $passwordCorrect = hash_equals(
-            (string)$storedPassword,
-            $matKhau
-        );
-
-        if ($passwordCorrect) {
-            // Dang nhap dung: ma hoa va cap nhat ngay
-            $newHash = password_hash(
-                $matKhau,
-                PASSWORD_DEFAULT
-            );
-
-            $update = $conn->prepare("
-                UPDATE taikhoan
-                SET MatKhau = :password
-                WHERE MaTaiKhoan = :id
-            ");
-
-            $update->execute([
-                'password' => $newHash,
-                'id' => $account['MaTaiKhoan']
-            ]);
-
-            // Cap nhat gia tri trong bien hien tai
-            $account['MatKhau'] = $newHash;
-        }
-    }
+    $passwordCorrect = password_verify(
+        $matKhau,
+        $storedPassword
+    );
 
     if (!$passwordCorrect) {
         respond(false, 'Ten dang nhap hoac mat khau khong dung', [], 401);
@@ -134,14 +101,24 @@ try {
 
     session_regenerate_id(true);
 
+
     $_SESSION['maTaiKhoan'] = (int)$account['MaTaiKhoan'];
     $_SESSION['tenDangNhap'] = $account['TenDangNhap'];
+    $_SESSION['hoTen'] = $account['HoTen']; 
+    $_SESSION['email'] = $account['Email']; 
     $_SESSION['vaiTro'] = $account['VaiTro'];
+   
+    if ($account['VaiTro'] === 'Admin') {
+        $redirectUrl = '/admin.html';
+    } else {
+        $redirectUrl = '/index.html';
+    }
 
     unset($account['MatKhau'], $account['TrangThai']);
 
-    respond(true, 'Dang nhap thanh cong', [
-        'taiKhoan' => $account
+    respond(true, 'Đăng nhập thành công', [
+        'taiKhoan' => $account,
+        'redirectUrl' => $redirectUrl
     ]);
 
 } catch (Throwable $e) {
