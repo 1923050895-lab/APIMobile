@@ -1,0 +1,3477 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeXeNhanh - Đặt Vé Xe Khách Trực Tuyến & Thanh Toán Ví Nội Bộ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            --secondary: #06b6d4;
+            --accent: #f43f5e;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --bg-main: #0b0f19;
+            --bg-card: #151d30;
+            --bg-card-hover: #1c263f;
+            --border: #232f4e;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.9rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .brand-text h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: white;
+            background: var(--primary);
+            box-shadow: 0 2px 10px var(--primary-glow);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .wallet-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .wallet-pill:hover {
+            background: rgba(16, 185, 129, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .role-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .role-KhachHang {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+        }
+
+        .role-NhanVien {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .role-Admin {
+            background: rgba(244, 63, 94, 0.2);
+            color: #fb7185;
+        }
+
+        /* HERO & SEARCH BAR */
+        .hero {
+            background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.22) 0%, rgba(11, 15, 25, 0) 70%);
+            padding: 3.5rem 2rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero h2 span {
+            background: linear-gradient(135deg, #818cf8, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 650px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .search-box {
+            max-width: 1050px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-field {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            gap: 6px;
+        }
+
+        .search-field label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .search-field input,
+        .search-field select {
+            background: rgba(11, 15, 25, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: white;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-field input:focus,
+        .search-field select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--primary-glow);
+        }
+
+        .btn-success {
+            background: #059669;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-danger {
+            background: #e11d48;
+        }
+
+        .btn-danger:hover {
+            background: #be123c;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: none;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            border-radius: 8px;
+        }
+
+        /* MAIN CONTENT AREA */
+        .content {
+            max-width: 1250px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* TRIP CARDS */
+        .trip-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .trip-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1.2fr 1fr;
+            gap: 1.5rem;
+            align-items: center;
+            transition: all 0.25s ease;
+        }
+
+        .trip-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .trip-time-block {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .time-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .time-box .time {
+            font-size: 1.35rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .time-box .place {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .time-line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+            padding: 0 10px;
+        }
+
+        .time-line .duration {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        .time-line-bar {
+            width: 100%;
+            height: 3px;
+            background: var(--border);
+            position: relative;
+            border-radius: 999px;
+        }
+
+        .time-line-bar::before,
+        .time-line-bar::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        .time-line-bar::after {
+            right: 0;
+            background: var(--secondary);
+        }
+
+        .bus-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .trip-price-block {
+            text-align: right;
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            padding-left: 1.5rem;
+        }
+
+        .trip-price-block .price {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #34d399;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .seats-available {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .seats-available b {
+            color: #38bdf8;
+        }
+
+        /* SEAT SELECTION MODAL / DRAWER */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            max-width: 950px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 1.25rem 1.75rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: white;
+        }
+
+        .modal-body {
+            padding: 1.75rem;
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 2rem;
+        }
+
+        /* BUS COACH LAYOUT */
+        .coach-container {
+            background: rgba(11, 15, 25, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .coach-front {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .floor-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        .floor-tab {
+            flex: 1;
+            padding: 6px;
+            text-align: center;
+            font-size: 0.82rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .floor-tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        .seat-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .seat-box {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            user-select: none;
+        }
+
+        .seat-box .num {
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: #34d399;
+        }
+
+        .seat-box .sub {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        .seat-box:hover:not(.DaDat) {
+            transform: scale(1.05);
+            background: rgba(16, 185, 129, 0.25);
+            border-color: #34d399;
+        }
+
+        .seat-box.selected {
+            background: var(--primary) !important;
+            border-color: #a5b4fc !important;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .seat-box.selected .num {
+            color: white !important;
+        }
+
+        .seat-box.DaDat {
+            background: rgba(244, 63, 94, 0.12) !important;
+            border-color: rgba(244, 63, 94, 0.25) !important;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .seat-box.DaDat .num {
+            color: #fb7185 !important;
+        }
+
+        /* CHECKOUT SUMMARY PANEL */
+        .checkout-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .checkout-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.88rem;
+        }
+
+        .checkout-total {
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .checkout-total .amount {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #34d399;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .wallet-status-box {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+
+        /* TICKET BOARDING PASS */
+        .ticket-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: 3fr 1.2fr;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .ticket-card::after {
+            content: '';
+            position: absolute;
+            right: calc(1.2fr / 4.2 * 100%);
+            top: -10px;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-main);
+            border-radius: 50%;
+        }
+
+        .ticket-main {
+            padding: 1.75rem;
+            border-right: 1px dashed var(--border);
+        }
+
+        .ticket-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .ticket-badge.ChuaIn {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .ticket-badge.DaIn {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+        }
+
+        .ticket-badge.DaHuy {
+            background: rgba(244, 63, 94, 0.2);
+            color: #fb7185;
+        }
+
+        .ticket-actions {
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(11, 15, 25, 0.4);
+            text-align: center;
+        }
+
+        /* TABS VIEWS */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* PRINT STYLING */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .navbar,
+            .hero,
+            .nav-links,
+            .ticket-actions,
+            .btn {
+                display: none !important;
+            }
+
+            .ticket-card {
+                border: 2px solid black;
+                box-shadow: none;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="brand" onclick="switchView('home')">
+            <div class="brand-icon">🚌</div>
+            <div class="brand-text">
+                <h1>VeXeNhanh</h1>
+                <span>Hệ Thống Đặt Vé Xe Khách</span>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <button class="nav-item active" onclick="switchView('home')">Trang Chủ</button>
+            <button class="nav-item" onclick="switchView('my-tickets')">Vé Của Tôi</button>
+            <button class="nav-item" onclick="switchView('wallet')">Ví Nội Bộ</button>
+            <button class="nav-item" id="navCounterBtn" onclick="switchView('counter')" style="display: none;">Quầy Bán
+                Vé</button>
+
+            <!-- ADMIN NAVIGATION -->
+            <button class="nav-item admin-nav-btn" id="navAdminUsersBtn" onclick="switchView('admin-users')"
+                style="display: none; background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3);">👥
+                QL Người Dùng</button>
+            <button class="nav-item admin-nav-btn" id="navAdminTripsBtn" onclick="switchView('admin-trips')"
+                style="display: none; background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);">🚍
+                QL Chuyến Đi</button>
+            <button class="nav-item admin-nav-btn" id="navAdminBusesBtn" onclick="switchView('admin-buses')"
+                style="display: none; background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3);">🚌
+                QL Xe & Ghế</button>
+            <button class="nav-item admin-nav-btn" id="navAdminDepositsBtn" onclick="switchView('admin-deposits')"
+                style="display: none; background: rgba(244,63,94,0.15); color: #fb7185; border: 1px solid rgba(244,63,94,0.3);">💰
+                Duyệt Nạp <span id="adminPendingBadge"
+                    style="background:#e11d48; color:white; border-radius:999px; padding:2px 7px; font-size:0.7rem; margin-left:4px;">0</span></button>
+
+            <a href="test_api.html" class="nav-item"
+                style="color: #a5b4fc; border: 1px dashed rgba(165,180,252,0.4); text-decoration: none;">📡 API
+                Tester</a>
+        </div>
+
+        <div class="user-actions">
+            <div class="wallet-pill" onclick="switchView('wallet')">
+                <span>💳 Ví:</span>
+                <span id="userBalanceText">0 đ</span>
+            </div>
+
+            <div id="userProfileBtn" style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
+                onclick="openAuthModal()">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700;"
+                    id="userAvatar">?</div>
+                <div>
+                    <div style="font-size: 0.85rem; font-weight: 700;" id="userFullName">Đăng nhập</div>
+                    <div id="userRoleBadge" class="role-tag role-KhachHang" style="display: none;">Khách</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- VIEW 1: HOME & SEARCH -->
+    <main id="view-home" class="view-section active">
+        <section class="hero">
+            <h2>Hành Trình Êm Ái, <span>Đặt Vé Liền Tay</span></h2>
+            <p>Hệ thống đặt vé xe khách liên tỉnh cao cấp. Chọn ghế trực quan, thanh toán tích tắc qua ví nội bộ và quản
+                lý vé thông minh.</p>
+
+            <!-- SEARCH BOX (UC-01) -->
+            <div class="search-box">
+                <div class="search-field">
+                    <label>Điểm Xuất Phát</label>
+                    <select id="searchFrom">
+                        <option value="">Tất cả điểm đi</option>
+                    </select>
+                </div>
+
+                <div class="search-field">
+                    <label>Điểm Đến</label>
+                    <select id="searchTo">
+                        <option value="">Tất cả điểm đến</option>
+                    </select>
+                </div>
+
+                <div class="search-field">
+                    <label>Ngày Đi</label>
+                    <input type="date" id="searchDate">
+                </div>
+
+                <div class="search-field">
+                    <label>Dòng Xe</label>
+                    <select id="searchBusType">
+                        <option value="">Tất cả các dòng xe</option>
+                        <option value="Limousine">Limousine Cung Điện</option>
+                        <option value="GiuongNam">Xe Giường Nằm VIP</option>
+                        <option value="GheNgoi">Ghế Ngồi Cao Cấp</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="executeSearchTrips()">
+                    <span>🔍</span> Tìm Vé Xe
+                </button>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="section-header">
+                <h3 class="section-title">Danh Sách Chuyến Xe Sẵn Sàng Khởi Hành</h3>
+                <span id="tripCountBadge" style="font-size: 0.88rem; color: var(--text-secondary); font-weight: 600;">3
+                    chuyến phù hợp</span>
+            </div>
+
+            <div id="tripListContainer" class="trip-list">
+                <!-- Trips rendered via JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- VIEW 2: MY TICKETS (UC-04, UC-05, UC-06) -->
+    <main id="view-my-tickets" class="view-section">
+        <section class="content" style="margin-top: 3rem;">
+            <div class="section-header">
+                <h3 class="section-title">🎫 Vé Đã Đặt Của Tôi</h3>
+                <button class="btn btn-secondary btn-sm" onclick="loadMyTickets()">🔄 Làm Mới</button>
+            </div>
+
+            <div
+                style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); padding: 1rem 1.5rem; border-radius: 14px; margin-bottom: 2rem; font-size: 0.88rem; line-height: 1.6;">
+                💡 <b>Chính sách In & Hủy Vé:</b>
+                <ul style="margin-left: 1.25rem; margin-top: 4px; color: var(--text-secondary);">
+                    <li><b>In vé (UC-05):</b> Một vé chứa toàn bộ danh sách ghế trong đơn hàng.</li>
+                    <li><b>Vé đã in (BR-03):</b> Sau khi in, trạng thái được chốt và <b>tuyệt đối không thể hủy hoặc
+                            hoàn tiền</b>.</li>
+                    <li><b>Hủy vé chưa in (UC-06, BR-04):</b> Được hoàn lại <b>50% giá trị vé</b> trực tiếp vào ví nội
+                        bộ và giải phóng ghế lập tức.</li>
+                </ul>
+            </div>
+
+            <div id="myTicketsList">
+                <!-- Tickets rendered via JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- VIEW 3: WALLET & DEPOSIT (UC-14, BR-01, BR-10) -->
+    <main id="view-wallet" class="view-section">
+        <section class="content" style="margin-top: 3rem; max-width: 950px;">
+            <div class="section-header">
+                <h3 class="section-title">💳 Quản Lý Ví Nội Bộ & Nạp Tiền</h3>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <!-- Wallet Card -->
+                <div
+                    style="background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid #4338ca; border-radius: 20px; padding: 2rem; box-shadow: 0 15px 35px rgba(0,0,0,0.4); display: flex; flex-direction: column; justify-content: space-between; height: 210px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span
+                            style="font-size: 0.85rem; font-weight: 700; color: #a5b4fc; text-transform: uppercase;">Ví
+                            Điện Tử VeXeNhanh</span>
+                        <span style="font-size: 1.2rem;">✨</span>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: #cbd5e1;">Số dư khả dụng:</div>
+                        <div id="walletCardBalance"
+                            style="font-size: 2.2rem; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;">
+                            0 đ</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #a5b4fc;">
+                        <span>Chủ ví: <b id="walletOwnerName">Chưa đăng nhập</b></span>
+                        <span>Mã TK: <b id="walletOwnerId">#0</b></span>
+                    </div>
+                </div>
+
+                <!-- VietQR Deposit Form (Vietcombank - NGUYEN MANH CUONG - STK 1041002875) -->
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <h4 style="font-size: 1.1rem; font-weight: 700; color: white;">📲 Nạp Tiền Qua VietQR</h4>
+                            <span class="role-tag" style="background: rgba(16,185,129,0.15); color: #34d399;">Duyệt
+                                Nhanh</span>
+                        </div>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                            Nhập số tiền muốn nạp. Hệ thống sẽ tạo mã <b>VietQR</b> với thông tin tài khoản: <b>NGUYEN
+                                MANH CUONG - STK: 1041002875</b>. Yêu cầu sẽ được gửi tới Admin để duyệt và cộng tiền
+                            vào ví ngay.
+                        </p>
+
+                        <div
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem;">
+                            <button class="btn btn-secondary btn-sm" onclick="setDepositAmount(50000)">50.000 đ</button>
+                            <button class="btn btn-secondary btn-sm" onclick="setDepositAmount(100000)">100.000
+                                đ</button>
+                            <button class="btn btn-secondary btn-sm" onclick="setDepositAmount(200000)">200.000
+                                đ</button>
+                            <button class="btn btn-secondary btn-sm" onclick="setDepositAmount(500000)">500.000
+                                đ</button>
+                            <button class="btn btn-secondary btn-sm" onclick="setDepositAmount(1000000)">1.000.000
+                                đ</button>
+                            <button class="btn btn-secondary btn-sm" onclick="setDepositAmount(2000000)">2.000.000
+                                đ</button>
+                        </div>
+
+                        <div class="search-field" style="margin-bottom: 1rem;">
+                            <label>Số Tiền Muốn Nạp (VNĐ)</label>
+                            <input type="number" id="customDepositAmount" value="200000" min="10000" step="10000"
+                                style="background: rgba(11,15,25,0.8); font-size: 1.1rem; font-weight: 700; color: #34d399; font-family: 'JetBrains Mono', monospace;">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-success" style="width: 100%; padding: 12px;" onclick="createVietQrDeposit()">
+                        📸 Tạo Mã VietQR & Gửi Yêu Cầu Nạp
+                    </button>
+                </div>
+            </div>
+
+            <!-- DANH SÁCH YÊU CẦU NẠP TIỀN CỦA TÔI -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h4 style="font-size: 1.1rem; font-weight: 700;">📋 Lịch Sử Yêu Cầu Nạp Tiền VietQR Của Bạn</h4>
+                <button class="btn btn-secondary btn-sm" onclick="loadMyDepositRequests()">🔄 Cập nhật trạng
+                    thái</button>
+            </div>
+            <div id="myDepositRequestsList"
+                style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 2rem;">
+                <!-- Rendered dynamically -->
+            </div>
+
+            <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">📜 Lịch Sử Biến Động Số Dư (Sao Kê)
+            </h4>
+            <div id="walletStatementList"
+                style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;">
+                <!-- Statement rendered via JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- VIEW 4: COUNTER STAFF (UC-07, UC-08, UC-09) -->
+    <main id="view-counter" class="view-section">
+        <section class="content" style="margin-top: 3rem;">
+            <div class="section-header">
+                <h3 class="section-title">🏪 Bàn Làm Việc Nhân Viên Quầy Bán Vé</h3>
+                <span class="role-tag role-NhanVien">Nhân viên: <span id="staffNameTag">Nguyễn Thị Thu
+                        Ngân</span></span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <!-- Form Đặt vé tại quầy (UC-07) -->
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem;">
+                    <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem;">Tạo Đơn Bán Vé Khách Vãng
+                        Lai (Guest)</h4>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="search-field">
+                            <label>Chọn Chuyến Xe</label>
+                            <select id="counterTripSelect" onchange="loadCounterSeats()">
+                                <option value="1">Chuyến #1: TP.HCM - Đà Lạt (350.000 đ)</option>
+                                <option value="2">Chuyến #2: TP.HCM - Đà Lạt (350.000 đ)</option>
+                                <option value="3">Chuyến #3: TP.HCM - Vũng Tàu (180.000 đ)</option>
+                            </select>
+                        </div>
+
+                        <div class="search-field">
+                            <label>Chọn Ghế Còn Trống</label>
+                            <div id="counterSeatBoxes"
+                                style="display: flex; flex-wrap: wrap; gap: 6px; max-height: 140px; overflow-y: auto; padding: 6px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="search-field">
+                            <label>Họ Tên Khách Vãng Lai</label>
+                            <input type="text" id="counterCustName" value="Nguyễn Văn Khách">
+                        </div>
+
+                        <div class="search-field">
+                            <label>Số Điện Thoại</label>
+                            <input type="text" id="counterCustPhone" value="0988776655">
+                        </div>
+
+                        <div class="search-field">
+                            <label>Phương Thức Thanh Toán</label>
+                            <select id="counterPayMethod">
+                                <option value="TienMat">Tiền Mặt (Tự động ghi nhận đã thanh toán)</option>
+                                <option value="ChuyenKhoan">Chuyển Khoản (Chờ đối chiếu biến động tài khoản)</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-warning" onclick="submitCounterBooking()">Xác Nhận Tạo Đơn Tại
+                            Quầy</button>
+                    </div>
+                </div>
+
+                <!-- Thao tác xác nhận chuyển khoản & in vé cứng (UC-08, UC-09) -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div
+                        style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 1.75rem;">
+                        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">UC-08: Xác Nhận Thanh
+                            Toán Chuyển Khoản</h4>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem;">Nhân viên kiểm
+                            tra số dư thực nhận vào tài khoản nhà xe trước khi xác nhận.</p>
+
+                        <div style="display: flex; gap: 8px;">
+                            <input type="number" id="quickConfirmOrderId" placeholder="Nhập Mã Đơn hàng (ID)"
+                                style="flex: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: white;">
+                            <button class="btn btn-success" onclick="confirmPaymentStaff()">Xác Nhận</button>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 1.75rem;">
+                        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">UC-09: In Vé Cứng Cho
+                            Khách</h4>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem;">Chỉ in được
+                            khi đơn đã được xác nhận thanh toán.</p>
+
+                        <div style="display: flex; gap: 8px;">
+                            <input type="number" id="quickPrintTicketId" placeholder="Nhập Mã Vé (ID)"
+                                style="flex: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: white;">
+                            <button class="btn" onclick="printCounterTicketStaff()">🖨️ In Vé Cứng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
+
+    <!-- VIEW 5: ADMIN DEPOSIT APPROVAL (DUYỆT NẠP TIỀN) -->
+    <main id="view-admin-deposits" class="view-section">
+        <section class="content" style="margin-top: 3rem;">
+            <div class="section-header">
+                <div>
+                    <h3 class="section-title">👑 Quản Trị & Duyệt Nạp Tiền VietQR</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+                        Đối soát giao dịch chuyển khoản thực tế về STK: <b style="color: #38bdf8;">1041002875</b> • Chủ
+                        TK: <b style="color: #38bdf8;">NGUYEN MANH CUONG</b> (Vietcombank)
+                    </p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <select id="adminDepositFilter" onchange="loadAdminDeposits()"
+                        style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; color: white;">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="ChoDuyet" selected>⏳ Chỉ yêu cầu Chờ Duyệt</option>
+                        <option value="DaDuyet">✅ Đã duyệt</option>
+                        <option value="TuChoi">❌ Đã từ chối</option>
+                    </select>
+                    <button class="btn btn-secondary btn-sm" onclick="loadAdminDeposits()">🔄 Tải Lại</button>
+                </div>
+            </div>
+
+            <div id="adminDepositsListContainer"
+                style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- VIEW 6: ADMIN USERS (QUẢN LÝ NGƯỜI DÙNG) -->
+    <main id="view-admin-users" class="view-section">
+        <section class="content" style="margin-top: 3rem;">
+            <div class="section-header">
+                <div>
+                    <h3 class="section-title">👥 Quản Trị Người Dùng & Phân Quyền</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+                        Quản lý danh sách tài khoản Khách hàng, Nhân viên bán vé và Quản trị viên
+                    </p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary btn-sm" onclick="openCreateUserModal()">➕ Thêm Người Dùng</button>
+                    <button class="btn btn-secondary btn-sm" onclick="loadAdminUsers()">🔄 Tải Lại</button>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(99,102,241,0.15); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        👥</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Tổng Tài Khoản</div>
+                        <div id="statTotalUsers" style="font-size: 1.35rem; font-weight: 800; color: white;">0</div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(168,85,247,0.15); color: #c084fc; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🎒</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Khách Hàng</div>
+                        <div id="statTotalCustomers" style="font-size: 1.35rem; font-weight: 800; color: #c084fc;">0
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(56,189,248,0.15); color: #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        💼</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Nhân Viên Quầy</div>
+                        <div id="statTotalStaff" style="font-size: 1.35rem; font-weight: 800; color: #38bdf8;">0</div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(244,63,94,0.15); color: #fb7185; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        👑</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Quản Trị Viên</div>
+                        <div id="statTotalAdmins" style="font-size: 1.35rem; font-weight: 800; color: #fb7185;">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem;">
+                <input type="text" id="adminUserSearchInput" placeholder="🔍 Tìm kiếm theo tên, username, SĐT, email..."
+                    oninput="filterAdminUsers()"
+                    style="flex: 1; min-width: 240px; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+                <select id="adminUserRoleFilter" onchange="filterAdminUsers()"
+                    style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+                    <option value="">Tất cả vai trò</option>
+                    <option value="KhachHang">Khách Hàng</option>
+                    <option value="NhanVien">Nhân Viên Quầy</option>
+                    <option value="Admin">Quản Trị Viên</option>
+                </select>
+                <select id="adminUserStatusFilter" onchange="filterAdminUsers()"
+                    style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="HoatDong">🟢 Đang hoạt động</option>
+                    <option value="BiKhoa">🔒 Bị khóa</option>
+                </select>
+            </div>
+
+            <div id="adminUsersListContainer"
+                style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- VIEW 7: ADMIN TRIPS (QUẢN LÝ CHUYẾN ĐI) -->
+    <main id="view-admin-trips" class="view-section">
+        <section class="content" style="margin-top: 3rem;">
+            <div class="section-header">
+                <div>
+                    <h3 class="section-title">🚍 Quản Trị Chuyến Xe & Lịch Trình (BR-09)</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+                        Khai báo chuyến xe mới, thiết lập giờ xuất phát, gán phương tiện và quản lý trạng thái
+                    </p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary btn-sm" onclick="openCreateTripModal()">➕ Tạo Chuyến Đi Mới</button>
+                    <button class="btn btn-secondary btn-sm" onclick="loadAdminTrips()">🔄 Tải Lại</button>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(56,189,248,0.15); color: #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🚍</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Tổng Chuyến</div>
+                        <div id="statTotalTrips" style="font-size: 1.35rem; font-weight: 800; color: white;">0</div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245,158,11,0.15); color: #fbbf24; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        ⏳</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Sắp Chạy</div>
+                        <div id="statSapChayTrips" style="font-size: 1.35rem; font-weight: 800; color: #fbbf24;">0</div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(52,211,153,0.15); color: #34d399; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🟢</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Đang Chạy</div>
+                        <div id="statDangChayTrips" style="font-size: 1.35rem; font-weight: 800; color: #34d399;">0
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(99,102,241,0.15); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🏁</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Hoàn Thành</div>
+                        <div id="statHoanThanhTrips" style="font-size: 1.35rem; font-weight: 800; color: #818cf8;">0
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(244,63,94,0.15); color: #fb7185; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🚫</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Đã Hủy</div>
+                        <div id="statHuyTrips" style="font-size: 1.35rem; font-weight: 800; color: #fb7185;">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem;">
+                <input type="text" id="adminTripSearchInput" placeholder="🔍 Tìm kiếm tuyến đường, biển số xe..."
+                    oninput="filterAdminTrips()"
+                    style="flex: 1; min-width: 240px; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+                <select id="adminTripStatusFilter" onchange="filterAdminTrips()"
+                    style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="SapChay">⏳ Sắp chạy</option>
+                    <option value="DangChay">🟢 Đang chạy</option>
+                    <option value="HoanThanh">🏁 Hoàn thành</option>
+                    <option value="HuyChuyen">🚫 Đã hủy</option>
+                </select>
+                <input type="date" id="adminTripDateFilter" onchange="filterAdminTrips()"
+                    style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+            </div>
+
+            <div id="adminTripsListContainer"
+                style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- VIEW 8: ADMIN BUSES (QUẢN LÝ XE & GHẾ) -->
+    <main id="view-admin-buses" class="view-section">
+        <section class="content" style="margin-top: 3rem;">
+            <div class="section-header">
+                <div>
+                    <h3 class="section-title">🚌 Quản Trị Xe & Danh Mục Ghế (UC-11)</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+                        Khai báo xe mới (tự động cấu hình danh mục ghế 2 tầng) và theo dõi tình trạng xe
+                    </p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary btn-sm" onclick="openCreateBusModal()">➕ Khai Báo Xe Mới</button>
+                    <button class="btn btn-secondary btn-sm" onclick="loadAdminBuses()">🔄 Tải Lại</button>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(52,211,153,0.15); color: #34d399; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🚌</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Tổng Số Xe</div>
+                        <div id="statTotalBuses" style="font-size: 1.35rem; font-weight: 800; color: white;">0</div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16,185,129,0.15); color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🟢</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Đang Hoạt Động</div>
+                        <div id="statActiveBuses" style="font-size: 1.35rem; font-weight: 800; color: #10b981;">0</div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245,158,11,0.15); color: #fbbf24; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🛠️</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Đang Bảo Trì</div>
+                        <div id="statMaintenanceBuses" style="font-size: 1.35rem; font-weight: 800; color: #fbbf24;">0
+                        </div>
+                    </div>
+                </div>
+                <div
+                    style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; display: flex; align-items: center; gap: 12px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 12px; background: rgba(244,63,94,0.15); color: #fb7185; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                        🛑</div>
+                    <div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Ngưng Hoạt Động</div>
+                        <div id="statStoppedBuses" style="font-size: 1.35rem; font-weight: 800; color: #fb7185;">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1.25rem;">
+                <input type="text" id="adminBusSearchInput" placeholder="🔍 Tìm kiếm biển số, tên xe..."
+                    oninput="filterAdminBuses()"
+                    style="flex: 1; min-width: 240px; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+                <select id="adminBusTypeFilter" onchange="filterAdminBuses()"
+                    style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+                    <option value="">Tất cả loại xe</option>
+                    <option value="GiuongNam">Giường Nằm</option>
+                    <option value="Limousine">Limousine VIP</option>
+                    <option value="GheNgoi">Ghế Ngồi</option>
+                </select>
+                <select id="adminBusStatusFilter" onchange="filterAdminBuses()"
+                    style="background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; color: white;">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="HoatDong">🟢 Đang hoạt động</option>
+                    <option value="BaoTri">🛠️ Đang bảo trì</option>
+                    <option value="NgungHoatDong">🛑 Ngưng hoạt động</option>
+                </select>
+            </div>
+
+            <div id="adminBusesListContainer"
+                style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- ADMIN USER MODAL -->
+    <div id="adminUserModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="adminUserModalTitle">Thêm Người Dùng Mới</h3>
+                <button class="modal-close" onclick="closeAdminUserModal()">&times;</button>
+            </div>
+            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 12px;">
+                <input type="hidden" id="formAdminUserId">
+
+                <div class="search-field">
+                    <label>Tên Đăng Nhập (*)</label>
+                    <input type="text" id="formAdminUsername" placeholder="VD: nguyenan99">
+                </div>
+
+                <div class="search-field">
+                    <label>Mật Khẩu (*)</label>
+                    <input type="password" id="formAdminPassword"
+                        placeholder="Nhập mật khẩu (để trống nếu không đổi khi sửa)">
+                </div>
+
+                <div class="search-field">
+                    <label>Họ và Tên (*)</label>
+                    <input type="text" id="formAdminFullName" placeholder="VD: Nguyễn Văn An">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="search-field">
+                        <label>Số Điện Thoại (*)</label>
+                        <input type="tel" id="formAdminPhone" placeholder="0987654321">
+                    </div>
+                    <div class="search-field">
+                        <label>Email</label>
+                        <input type="email" id="formAdminEmail" placeholder="an@gmail.com">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="search-field">
+                        <label>Vai Trò (*)</label>
+                        <select id="formAdminRole"
+                            style="width: 100%; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white;">
+                            <option value="KhachHang">Khách Hàng</option>
+                            <option value="NhanVien">Nhân Viên Bán Vé</option>
+                            <option value="Admin">Quản Trị Viên (Admin)</option>
+                        </select>
+                    </div>
+                    <div class="search-field">
+                        <label>Trạng Thái (*)</label>
+                        <select id="formAdminStatus"
+                            style="width: 100%; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white;">
+                            <option value="HoatDong">🟢 Đang hoạt động</option>
+                            <option value="BiKhoa">🔒 Bị khóa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn btn-secondary" style="flex: 1;" onclick="closeAdminUserModal()">Hủy</button>
+                    <button class="btn btn-primary" style="flex: 2;" onclick="submitAdminUserForm()">💾 Lưu Thông
+                        Tin</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN TRIP MODAL -->
+    <div id="adminTripModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="adminTripModalTitle">Tạo Chuyến Đi Mới</h3>
+                <button class="modal-close" onclick="closeAdminTripModal()">&times;</button>
+            </div>
+            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 12px;">
+                <input type="hidden" id="formAdminTripId">
+
+                <div class="search-field">
+                    <label>Tuyến Xe (*)</label>
+                    <select id="formAdminTripRoute"
+                        style="width: 100%; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white;">
+                        <option value="">-- Đang tải tuyến đường... --</option>
+                    </select>
+                </div>
+
+                <div class="search-field">
+                    <label>Xe Phục Vụ (*)</label>
+                    <select id="formAdminTripBus"
+                        style="width: 100%; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white;">
+                        <option value="">-- Đang tải danh sách xe... --</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="search-field">
+                        <label>Thời Gian Xuất Phát (*)</label>
+                        <input type="datetime-local" id="formAdminTripDepTime" style="color: white;">
+                    </div>
+                    <div class="search-field">
+                        <label>Thời Gian Đến Dự Kiến (*)</label>
+                        <input type="datetime-local" id="formAdminTripArrTime" style="color: white;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="search-field">
+                        <label>Giá Vé Cố Định (VND) (*)</label>
+                        <input type="number" id="formAdminTripPrice" placeholder="VD: 250000" min="10000" step="5000">
+                    </div>
+                    <div class="search-field">
+                        <label>Trạng Thái Chuyến (*)</label>
+                        <select id="formAdminTripStatus"
+                            style="width: 100%; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white;">
+                            <option value="SapChay">⏳ Sắp chạy</option>
+                            <option value="DangChay">🟢 Đang chạy</option>
+                            <option value="HoanThanh">🏁 Đã hoàn thành</option>
+                            <option value="HuyChuyen">🚫 Hủy chuyến</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn btn-secondary" style="flex: 1;" onclick="closeAdminTripModal()">Hủy</button>
+                    <button class="btn btn-primary" style="flex: 2;" onclick="submitAdminTripForm()">💾 Lưu Chuyến
+                        Đi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN VIEW TRIP SEATS MODAL -->
+    <div id="adminTripSeatsModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 650px;">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title" id="adminTripSeatsModalTitle">Sơ Đồ Ghế Chuyến Đi</h3>
+                    <div id="adminTripSeatsSubtitle"
+                        style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;"></div>
+                </div>
+                <button class="modal-close" onclick="closeAdminTripSeatsModal()">&times;</button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1rem; font-size: 0.8rem;">
+                    <span style="display: flex; align-items: center; gap: 6px;"><span
+                            style="width: 14px; height: 14px; background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; border-radius: 4px;"></span>
+                        Ghế Trống</span>
+                    <span style="display: flex; align-items: center; gap: 6px;"><span
+                            style="width: 14px; height: 14px; background: rgba(244, 63, 94, 0.2); border: 1px solid #fb7185; border-radius: 4px;"></span>
+                        Đã Có Khách Đặt</span>
+                </div>
+
+                <div style="display: flex; gap: 1.5rem; justify-content: center;">
+                    <div
+                        style="flex: 1; background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 14px; padding: 1rem;">
+                        <div
+                            style="text-align: center; font-weight: 700; font-size: 0.85rem; color: #38bdf8; margin-bottom: 10px;">
+                            TẦNG 1 (Dãy A)</div>
+                        <div id="adminFloor1Seats"
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;"></div>
+                    </div>
+                    <div
+                        style="flex: 1; background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 14px; padding: 1rem;">
+                        <div
+                            style="text-align: center; font-weight: 700; font-size: 0.85rem; color: #a855f7; margin-bottom: 10px;">
+                            TẦNG 2 (Dãy B)</div>
+                        <div id="adminFloor2Seats"
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN BUS MODAL -->
+    <div id="adminBusModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="adminBusModalTitle">Khai Báo Xe Mới</h3>
+                <button class="modal-close" onclick="closeAdminBusModal()">&times;</button>
+            </div>
+            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 12px;">
+                <input type="hidden" id="formAdminBusId">
+
+                <div class="search-field">
+                    <label>Biển Số Xe (*) (VD: 51B-888.99)</label>
+                    <input type="text" id="formAdminBusPlate" placeholder="51B-888.99"
+                        style="text-transform: uppercase;">
+                </div>
+
+                <div class="search-field">
+                    <label>Tên / Dòng Xe (*) (VD: Thaco Mobihome VIP)</label>
+                    <input type="text" id="formAdminBusName" placeholder="Thaco Mobihome VIP">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="search-field">
+                        <label>Loại Xe (*)</label>
+                        <select id="formAdminBusType"
+                            style="width: 100%; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white;">
+                            <option value="GiuongNam">Giường Nằm</option>
+                            <option value="Limousine">Limousine VIP</option>
+                            <option value="GheNgoi">Ghế Ngồi</option>
+                        </select>
+                    </div>
+                    <div class="search-field" id="formAdminBusSeatCountWrapper">
+                        <label>Số Ghế (*) (Tự sinh ghế)</label>
+                        <select id="formAdminBusSeatCount"
+                            style="width: 100%; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white;">
+                            <option value="24">24 Chỗ (12/12)</option>
+                            <option value="34">34 Chỗ (17/17)</option>
+                            <option value="40">40 Chỗ (20/20)</option>
+                            <option value="16">16 Chỗ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-field">
+                    <label>Trạng Thái Phương Tiện (*)</label>
+                    <select id="formAdminBusStatus"
+                        style="width: 100%; background: rgba(15,23,42,0.8); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white;">
+                        <option value="HoatDong">🟢 Đang hoạt động</option>
+                        <option value="BaoTri">🛠️ Đang bảo trì</option>
+                        <option value="NgungHoatDong">🛑 Ngưng hoạt động</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn btn-secondary" style="flex: 1;" onclick="closeAdminBusModal()">Hủy</button>
+                    <button class="btn btn-primary" style="flex: 2;" onclick="submitAdminBusForm()">💾 Lưu Thông Tin
+                        Xe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN VIEW BUS SEATS MODAL -->
+    <div id="adminBusSeatsModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title" id="adminBusSeatsModalTitle">Danh Mục Ghế Xe</h3>
+                    <div id="adminBusSeatsSubtitle"
+                        style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;"></div>
+                </div>
+                <button class="modal-close" onclick="closeAdminBusSeatsModal()">&times;</button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <div id="adminBusSeatsListContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Rendered dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIETQR POPUP MODAL -->
+    <div id="vietQrModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 520px; text-align: center;">
+            <div class="modal-header">
+                <h3 class="modal-title">Quét Mã VietQR Chuyển Khoản</h3>
+                <button class="modal-close" onclick="closeVietQrModal()">&times;</button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <div
+                    style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 10px; font-size: 0.82rem; color: #fbbf24; margin-bottom: 1.25rem;">
+                    ⏳ <b>Trạng thái: Đang chờ Admin duyệt</b><br>
+                    Sau khi bạn chuyển khoản, Admin sẽ kiểm tra và cộng tiền vào ví trong giây lát.
+                </div>
+
+                <!-- VietQR Image Container -->
+                <div
+                    style="background: white; border-radius: 16px; padding: 12px; display: inline-block; box-shadow: 0 8px 25px rgba(0,0,0,0.5); margin-bottom: 1.25rem;">
+                    <img id="vietQrImageTag" src="" alt="VietQR"
+                        style="width: 260px; height: 260px; object-fit: contain; display: block; border-radius: 8px;">
+                </div>
+
+                <!-- Transfer Info Card -->
+                <div
+                    style="background: rgba(11, 15, 25, 0.7); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; text-align: left; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-muted);">Ngân hàng:</span>
+                        <b id="qrBankName" style="color: #38bdf8;">Vietcombank (VCB)</b>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-muted);">Số tài khoản:</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <b id="qrAccNo"
+                                style="font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: white;">1041002875</b>
+                            <button class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.7rem;"
+                                onclick="copyQrText('qrAccNo', 'Số tài khoản')">Copy</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-muted);">Chủ tài khoản:</span>
+                        <b id="qrAccName" style="color: white;">NGUYEN MANH CUONG</b>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-muted);">Số tiền:</span>
+                        <b id="qrAmountFormatted"
+                            style="color: #34d399; font-size: 1.1rem; font-family: 'JetBrains Mono', monospace;">0 đ</b>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 8px;">
+                        <span style="color: var(--text-muted);">Nội dung CK:</span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <b id="qrContentText"
+                                style="font-family: 'JetBrains Mono', monospace; color: #fbbf24; font-size: 0.85rem;">NAPVI
+                                ...</b>
+                            <button class="btn btn-secondary btn-sm" style="padding: 2px 8px; font-size: 0.7rem;"
+                                onclick="copyQrText('qrContentText', 'Nội dung chuyển khoản')">Copy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 1.25rem;">
+                    <button class="btn btn-success" style="flex: 1;" onclick="finishTransferAction()">
+                        ✅ Tôi Đã Chuyển Khoản Xong
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeVietQrModal()">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEAT SELECTION & CHECKOUT MODAL (UC-02, UC-03) -->
+    <div id="seatModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h3 class="modal-title" id="modalTripTitle">Chọn Ghế - Tuyến Xe</h3>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;" id="modalTripSub">
+                        Khởi hành lúc --:--</div>
+                </div>
+                <button class="modal-close" onclick="closeSeatModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Left: Coach Seat Layout -->
+                <div class="coach-container">
+                    <div class="coach-front">
+                        <span>🚪 Cửa lên xuống</span>
+                        <span>☸️ Tài xế</span>
+                    </div>
+
+                    <div class="floor-tabs">
+                        <button class="floor-tab active" id="tabFloor1" onclick="switchFloor(1)">Tầng 1 (Dưới)</button>
+                        <button class="floor-tab" id="tabFloor2" onclick="switchFloor(2)">Tầng 2 (Trên)</button>
+                    </div>
+
+                    <div id="seatGridModal" class="seat-matrix">
+                        <!-- Seats dynamically rendered -->
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-around; margin-top: 1rem; font-size: 0.78rem; color: var(--text-secondary); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px;">
+                        <span style="display: flex; align-items: center; gap: 6px;"><span
+                                style="width: 12px; height: 12px; background: rgba(16,185,129,0.3); border: 1px solid #10b981; border-radius: 3px;"></span>
+                            Còn trống</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span
+                                style="width: 12px; height: 12px; background: var(--primary); border-radius: 3px;"></span>
+                            Đang chọn</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span
+                                style="width: 12px; height: 12px; background: rgba(244,63,94,0.3); border: 1px solid #f43f5e; border-radius: 3px;"></span>
+                            Đã bán</span>
+                    </div>
+                </div>
+
+                <!-- Right: Booking Summary & Wallet Checkout -->
+                <div class="checkout-panel">
+                    <div>
+                        <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem;">Thông Tin Thanh Toán
+                        </h4>
+
+                        <div class="checkout-line">
+                            <span style="color: var(--text-secondary);">Đơn giá 1 ghế:</span>
+                            <b id="checkoutUnitPrice">0 đ</b>
+                        </div>
+
+                        <div class="checkout-line">
+                            <span style="color: var(--text-secondary);">Ghế đang chọn:</span>
+                            <b id="checkoutSelectedSeats" style="color: #818cf8;">Chưa chọn</b>
+                        </div>
+
+                        <div class="checkout-line">
+                            <span style="color: var(--text-secondary);">Số lượng ghế:</span>
+                            <b id="checkoutSeatCount">0</b>
+                        </div>
+
+                        <div class="wallet-status-box">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                                <span style="color: var(--text-secondary);">Số dư ví của bạn:</span>
+                                <b id="checkoutWalletBalance" style="color: #34d399;">0 đ</b>
+                            </div>
+                            <div id="walletWarningText" style="color: #fb7185; font-size: 0.78rem; display: none;">⚠️ Số
+                                dư ví không đủ, vui lòng nạp thêm tiền!</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="checkout-total">
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">Tổng thanh toán:</div>
+                                <div class="amount" id="checkoutTotalAmount">0 đ</div>
+                            </div>
+                            <button class="btn btn-success" id="btnConfirmBooking" onclick="executeOnlineBooking()">
+                                ⚡ Thanh Toán Bằng Ví
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-card" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Đăng Nhập Hệ Thống</h3>
+                <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+            </div>
+            <div style="padding: 1.75rem;">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Đăng nhập nhanh theo
+                    các tài khoản thử nghiệm:</p>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem;">
+                    <button class="btn btn-secondary btn-sm" onclick="quickLoginAccount('khachhang01')">👤 Khách hàng
+                        (khachhang01 - Nguyễn Văn An)</button>
+                    <button class="btn btn-secondary btn-sm" onclick="quickLoginAccount('nhanvien01')">💼 Nhân viên quầy
+                        (nhanvien01 - Nguyễn Thị Thu Ngân)</button>
+                    <button class="btn btn-secondary btn-sm" onclick="quickLoginAccount('admin01')">🛡️ Quản trị viên
+                        (admin01)</button>
+                </div>
+
+                <div class="search-field" style="margin-bottom: 1rem;">
+                    <label>Tên Đăng Nhập</label>
+                    <input type="text" id="modalUsername" value="khachhang01">
+                </div>
+
+                <div class="search-field" style="margin-bottom: 1.5rem;">
+                    <label>Mật Khẩu</label>
+                    <input type="password" id="modalPassword" value="123456">
+                </div>
+
+                <button class="btn" style="width: 100%;" onclick="submitLogin()">Đăng Nhập</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.origin + window.location.pathname.replace('app.html', 'api');
+        let authToken = localStorage.getItem('token') || '';
+        let currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+        let currentTripData = null;
+        let selectedSeats = [];
+        let currentFloor = 1;
+        let allSeatsOfCurrentTrip = [];
+
+        window.onload = async function () {
+            initAuth();
+            await loadStations();
+            await executeSearchTrips();
+            if (currentUser) {
+                await updateWalletBalance();
+            }
+        };
+
+        function initAuth() {
+            if (currentUser && authToken) {
+                document.getElementById('userFullName').textContent = currentUser.HoTen;
+                document.getElementById('userAvatar').textContent = currentUser.HoTen.charAt(0);
+                const roleBadge = document.getElementById('userRoleBadge');
+                roleBadge.textContent = currentUser.VaiTro;
+                roleBadge.className = `role-tag role-${currentUser.VaiTro}`;
+                roleBadge.style.display = 'inline-block';
+                document.getElementById('userBalanceText').textContent = `${Number(currentUser.SoDu || 0).toLocaleString('vi-VN')} đ`;
+
+                // Show counter tab for staff or admin
+                if (currentUser.VaiTro === 'NhanVien' || currentUser.VaiTro === 'Admin') {
+                    document.getElementById('navCounterBtn').style.display = 'block';
+                    document.getElementById('staffNameTag').textContent = currentUser.HoTen;
+                } else {
+                    document.getElementById('navCounterBtn').style.display = 'none';
+                }
+
+                // Show Admin Navigation buttons for admin
+                if (currentUser.VaiTro === 'Admin') {
+                    document.querySelectorAll('.admin-nav-btn').forEach(b => b.style.display = 'inline-flex');
+                    checkAdminPendingBadge();
+                } else {
+                    document.querySelectorAll('.admin-nav-btn').forEach(b => b.style.display = 'none');
+                }
+            } else {
+                quickLoginAccount('khachhang01');
+            }
+        }
+
+        async function api(endpoint, method = 'GET', body = null) {
+            const headers = { 'Content-Type': 'application/json' };
+            if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
+
+            const opts = { method, headers };
+            if (body && (method === 'POST' || method === 'PUT')) {
+                opts.body = JSON.stringify(body);
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/${endpoint}`, opts);
+                return await res.json();
+            } catch (err) {
+                console.error('API Error:', err);
+                return null;
+            }
+        }
+
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            const view = document.getElementById('view-' + viewName);
+            if (view) view.classList.add('active');
+
+            if (viewName === 'my-tickets') loadMyTickets();
+            if (viewName === 'wallet') {
+                loadWalletView();
+                loadMyDepositRequests();
+            }
+            if (viewName === 'counter') loadCounterSeats();
+            if (viewName === 'admin-users') loadAdminUsers();
+            if (viewName === 'admin-trips') loadAdminTrips();
+            if (viewName === 'admin-buses') loadAdminBuses();
+            if (viewName === 'admin-deposits') loadAdminDeposits();
+        }
+
+        async function loadStations() {
+            const res = await api('locations');
+            if (res && res.success) {
+                const fromSelect = document.getElementById('searchFrom');
+                const toSelect = document.getElementById('searchTo');
+                res.data.forEach(s => {
+                    const opt1 = new Option(s.TenDiaDiem, s.MaDiaDiem);
+                    const opt2 = new Option(s.TenDiaDiem, s.MaDiaDiem);
+                    fromSelect.add(opt1);
+                    toSelect.add(opt2);
+                });
+            }
+        }
+
+        async function executeSearchTrips() {
+            const from = document.getElementById('searchFrom').value;
+            const to = document.getElementById('searchTo').value;
+            const date = document.getElementById('searchDate').value;
+            const busType = document.getElementById('searchBusType').value;
+
+            let query = [];
+            if (from) query.push(`diem_di=${encodeURIComponent(from)}`);
+            if (to) query.push(`diem_den=${encodeURIComponent(to)}`);
+            if (date) query.push(`ngay_di=${encodeURIComponent(date)}`);
+            if (busType) query.push(`loai_xe=${encodeURIComponent(busType)}`);
+
+            const res = await api('trips/search?' + query.join('&'));
+            const container = document.getElementById('tripListContainer');
+            container.innerHTML = '';
+
+            if (res && res.success && res.data.trips.length > 0) {
+                document.getElementById('tripCountBadge').textContent = `${res.data.trips.length} chuyến phù hợp`;
+                res.data.trips.forEach(t => {
+                    const card = document.createElement('div');
+                    card.className = 'trip-card';
+                    card.innerHTML = `
+                        <div class="trip-time-block">
+                            <div class="time-box">
+                                <div class="time">${t.ThoiGianDi.substring(11, 16)}</div>
+                                <div class="place">${t.TenDiemDi}</div>
+                            </div>
+
+                            <div class="time-line">
+                                <span class="duration">${t.ThoiGianDuKienPhut || 360} phút</span>
+                                <div class="time-line-bar"></div>
+                                <span style="font-size: 0.7rem; color: var(--text-muted);">${t.KhoangCachKm || 300} km</span>
+                            </div>
+
+                            <div class="time-box">
+                                <div class="time">${t.ThoiGianDen.substring(11, 16)}</div>
+                                <div class="place">${t.TenDiemDen}</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="font-size: 0.95rem; font-weight: 700; color: white;">${t.TenXe}</div>
+                            <div class="bus-badge">🚍 ${t.BienSo} • ${t.LoaiXe}</div>
+                            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Tuyến: ${t.TenTuyen}</div>
+                        </div>
+
+                        <div class="trip-price-block">
+                            <div class="price">${Number(t.GiaVe).toLocaleString('vi-VN')} đ</div>
+                            <div class="seats-available">Còn <b>${t.SoGheConTrong}</b> ghế trống</div>
+                            <button class="btn btn-sm" style="margin-top: 10px; width: 100%;" onclick="openSeatModal(${t.MaChuyen})">
+                                Chọn Ghế & Đặt
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } else {
+                document.getElementById('tripCountBadge').textContent = '0 chuyến';
+                container.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-secondary);">Không tìm thấy chuyến xe phù hợp với điều kiện tìm kiếm.</div>`;
+            }
+        }
+
+        async function openSeatModal(tripId) {
+            selectedSeats = [];
+            currentFloor = 1;
+            document.getElementById('seatModal').classList.add('active');
+
+            const res = await api(`trips/${tripId}/seats`);
+            if (res && res.success) {
+                currentTripData = res.data.trip;
+                allSeatsOfCurrentTrip = res.data.seats;
+
+                document.getElementById('modalTripTitle').textContent = `Chuyến #${currentTripData.MaChuyen}: ${currentTripData.TenTuyen}`;
+                document.getElementById('modalTripSub').textContent = `Xuất phát: ${currentTripData.ThoiGianDi} • Biển số: ${currentTripData.BienSo}`;
+                document.getElementById('checkoutUnitPrice').textContent = `${Number(currentTripData.GiaVe).toLocaleString('vi-VN')} đ`;
+                document.getElementById('checkoutWalletBalance').textContent = `${Number(currentUser?.SoDu || 0).toLocaleString('vi-VN')} đ`;
+
+                renderFloorSeats(1);
+                updateCheckoutSummary();
+            }
+        }
+
+        function switchFloor(floor) {
+            currentFloor = floor;
+            document.getElementById('tabFloor1').classList.toggle('active', floor === 1);
+            document.getElementById('tabFloor2').classList.toggle('active', floor === 2);
+            renderFloorSeats(floor);
+        }
+
+        function renderFloorSeats(floor) {
+            const grid = document.getElementById('seatGridModal');
+            grid.innerHTML = '';
+
+            const seatsOfFloor = allSeatsOfCurrentTrip.filter(s => Number(s.Tang) === Number(floor));
+
+            // Luôn hiển thị 2 hàng (Trái / Phải) cho mọi loại xe
+            grid.className = '';
+            grid.style.display = 'block';
+
+            const half = Math.ceil(seatsOfFloor.length / 2);
+            const leftSeats = seatsOfFloor.slice(0, half);
+            const rightSeats = seatsOfFloor.slice(half);
+
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.gap = '12px';
+            wrapper.style.alignItems = 'stretch';
+
+            // HÀNG TRÁI
+            const leftCol = document.createElement('div');
+            leftCol.style.flex = '1';
+            leftCol.innerHTML = `
+                <div style="text-align: center; color: #38bdf8; font-weight: 700; font-size: 0.78rem; margin-bottom: 8px; background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.25); border-radius: 6px; padding: 5px;">
+                    ⬅️ HÀNG TRÁI (${leftSeats.length} Chỗ)
+                </div>
+            `;
+            const leftBoxList = document.createElement('div');
+            leftBoxList.style.display = 'grid';
+            leftBoxList.style.gridTemplateColumns = '1fr';
+            leftBoxList.style.gap = '8px';
+            leftSeats.forEach(seat => leftBoxList.appendChild(createSeatBoxElement(seat)));
+            leftCol.appendChild(leftBoxList);
+
+            // LỐI ĐI Ở GIỮA
+            const aisle = document.createElement('div');
+            aisle.style.width = '30px';
+            aisle.style.display = 'flex';
+            aisle.style.flexDirection = 'column';
+            aisle.style.alignItems = 'center';
+            aisle.style.justifyContent = 'center';
+            aisle.style.color = 'var(--text-muted)';
+            aisle.style.fontSize = '0.68rem';
+            aisle.style.fontWeight = '800';
+            aisle.style.letterSpacing = '2px';
+            aisle.style.borderLeft = '1px dashed rgba(255,255,255,0.12)';
+            aisle.style.borderRight = '1px dashed rgba(255,255,255,0.12)';
+            aisle.style.margin = '4px 0';
+            aisle.innerHTML = '<span>L</span><span>Ố</span><span>I</span><br><span>Đ</span><span>I</span>';
+
+            // HÀNG PHẢI
+            const rightCol = document.createElement('div');
+            rightCol.style.flex = '1';
+            rightCol.innerHTML = `
+                <div style="text-align: center; color: #a855f7; font-weight: 700; font-size: 0.78rem; margin-bottom: 8px; background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.25); border-radius: 6px; padding: 5px;">
+                    HÀNG PHẢI (${rightSeats.length} Chỗ) ➡️
+                </div>
+            `;
+            const rightBoxList = document.createElement('div');
+            rightBoxList.style.display = 'grid';
+            rightBoxList.style.gridTemplateColumns = '1fr';
+            rightBoxList.style.gap = '8px';
+            rightSeats.forEach(seat => rightBoxList.appendChild(createSeatBoxElement(seat)));
+            rightCol.appendChild(rightBoxList);
+
+            wrapper.appendChild(leftCol);
+            wrapper.appendChild(aisle);
+            wrapper.appendChild(rightCol);
+            grid.appendChild(wrapper);
+        }
+
+        function createSeatBoxElement(seat) {
+            const div = document.createElement('div');
+            const isSelected = selectedSeats.some(s => s.MaGhe === seat.MaGhe);
+            div.className = `seat-box ${seat.TrangThaiDat} ${isSelected ? 'selected' : ''}`;
+            div.innerHTML = `
+                <span class="num">${seat.SoGhe}</span>
+                <span class="sub">${seat.TrangThaiDat === 'DaDat' ? 'Đã đặt' : (Number(currentTripData.GiaVe) / 1000) + 'k'}</span>
+            `;
+
+            if (seat.TrangThaiDat === 'ConTrong') {
+                div.onclick = () => toggleSelectSeat(seat);
+            }
+            return div;
+        }
+
+        function toggleSelectSeat(seat) {
+            const index = selectedSeats.findIndex(s => s.MaGhe === seat.MaGhe);
+            if (index > -1) {
+                selectedSeats.splice(index, 1);
+            } else {
+                selectedSeats.push(seat);
+            }
+            renderFloorSeats(currentFloor);
+            updateCheckoutSummary();
+        }
+
+        function updateCheckoutSummary() {
+            const labels = selectedSeats.map(s => s.SoGhe).join(', ');
+            document.getElementById('checkoutSelectedSeats').textContent = labels || 'Chưa chọn';
+            document.getElementById('checkoutSeatCount').textContent = selectedSeats.length;
+
+            const unitPrice = currentTripData ? Number(currentTripData.GiaVe) : 0;
+            const total = unitPrice * selectedSeats.length;
+            document.getElementById('checkoutTotalAmount').textContent = `${total.toLocaleString('vi-VN')} đ`;
+
+            const balance = currentUser ? Number(currentUser.SoDu || 0) : 0;
+            const warning = document.getElementById('walletWarningText');
+            const btn = document.getElementById('btnConfirmBooking');
+
+            if (selectedSeats.length > 0 && balance < total) {
+                warning.style.display = 'block';
+                warning.textContent = `⚠️ Số dư ví (${balance.toLocaleString('vi-VN')} đ) thiếu ${(total - balance).toLocaleString('vi-VN')} đ. Vui lòng nạp thêm!`;
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+            } else {
+                warning.style.display = 'none';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
+
+        function closeSeatModal() {
+            document.getElementById('seatModal').classList.remove('active');
+        }
+
+        async function executeOnlineBooking() {
+            if (!currentUser) {
+                openAuthModal();
+                return;
+            }
+            if (selectedSeats.length === 0) {
+                alert('Vui lòng chọn ít nhất 1 ghế trống!');
+                return;
+            }
+
+            const payload = {
+                MaChuyen: currentTripData.MaChuyen,
+                DanhSachMaGhe: selectedSeats.map(s => s.MaGhe)
+            };
+
+            const res = await api('bookings/book', 'POST', payload);
+            if (res && res.success) {
+                alert(`🎉 ĐẶT VÉ VÀ TRỪ VÍ THÀNH CÔNG!\n- Mã vé: ${res.data.ticket_code}\n- Ghế đã mua: ${res.data.seats.join(', ')}\n- Số dư ví còn lại: ${Number(res.data.new_balance).toLocaleString('vi-VN')} đ`);
+                currentUser.SoDu = res.data.new_balance;
+                initAuth();
+                closeSeatModal();
+                switchView('my-tickets');
+            } else {
+                alert(`❌ ${res?.message || 'Đặt vé thất bại'}`);
+            }
+        }
+
+        async function loadMyTickets() {
+            const container = document.getElementById('myTicketsList');
+            container.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-secondary);">Đang tải danh sách vé...</div>';
+
+            const res = await api('tickets/my-tickets');
+            container.innerHTML = '';
+
+            if (res && res.success && res.data.tickets.length > 0) {
+                res.data.tickets.forEach(t => {
+                    const isPrinted = t.TrangThaiVe === 'DaIn';
+                    const isCancelled = t.TrangThaiVe === 'DaHuy';
+                    const badgeClass = isCancelled ? 'DaHuy' : (isPrinted ? 'DaIn' : 'ChuaIn');
+                    const badgeText = isCancelled ? 'Đã Hủy (-50%)' : (isPrinted ? 'Đã In (Khóa Hủy)' : 'Chưa In (Có Thể Hủy)');
+
+                    const card = document.createElement('div');
+                    card.className = 'ticket-card';
+                    card.innerHTML = `
+                        <div class="ticket-main">
+                            <span class="ticket-badge ${badgeClass}">${badgeText}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h4 style="font-size: 1.25rem; font-weight: 800; color: white;">${t.TenTuyen}</h4>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">${t.TenDiemDi} ➔ ${t.TenDiemDen}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 700; color: #38bdf8;">${t.MaVeHienThi}</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">Đơn: ${t.MaDonHienThi}</div>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--border);">
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Khởi hành</div>
+                                    <div style="font-size: 0.92rem; font-weight: 700;">${t.ThoiGianDi}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Xe & Biển số</div>
+                                    <div style="font-size: 0.92rem; font-weight: 700;">${t.BienSo} (${t.TenXe})</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Ghế đã mua</div>
+                                    <div style="font-size: 1.1rem; font-weight: 800; color: #818cf8;">${t.DanhSachGhe || ''}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ticket-actions">
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Tổng thanh toán:</div>
+                            <div style="font-size: 1.35rem; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace;">
+                                ${Number(t.TongTien).toLocaleString('vi-VN')} đ
+                            </div>
+
+                            ${!isCancelled ? `<button class="btn btn-sm btn-success" onclick="executePrintTicket(${t.MaVe})">🖨️ In Vé</button>` : ''}
+                            ${!isPrinted && !isCancelled ? `<button class="btn btn-sm btn-danger" onclick="executeCancelTicket(${t.MaVe})">❌ Hủy Vé (-50%)</button>` : ''}
+                            ${isPrinted ? `<span style="font-size:0.75rem; color:#94a3b8;">Đã in lần đầu lúc:<br>${t.ThoiGianInDauTien}</span>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = '<div style="text-align:center; padding:3rem; color:var(--text-secondary);">Bạn chưa có vé nào. Hãy tra cứu và đặt vé ngay!</div>';
+            }
+        }
+
+        async function executePrintTicket(ticketId) {
+            const res = await api(`tickets/${ticketId}/print`, 'POST');
+            if (res && res.success) {
+                alert(`🖨️ IN VÉ THÀNH CÔNG!\n- Mã vé: ${res.data.ticket_code}\n- Chuyến: ${res.data.trip}\n- Toàn bộ ghế: ${res.data.seats.join(', ')}\n(Theo quy tắc BR-03: Kể từ bây giờ vé đã in sẽ không thể hủy hoặc hoàn tiền)`);
+                loadMyTickets();
+            } else {
+                alert(res?.message || 'Lỗi in vé');
+            }
+        }
+
+        async function executeCancelTicket(ticketId) {
+            if (!confirm('XÁC NHẬN HỦY VÉ?\nTheo quy định BR-04: Bạn sẽ nhận lại đúng 50% giá trị vé vào ví nội bộ và giải phóng ghế cho hành khách khác.')) return;
+
+            const res = await api(`tickets/${ticketId}/cancel`, 'POST');
+            if (res && res.success) {
+                alert(`✅ HỦY VÉ THÀNH CÔNG!\n- Tiền hoàn lại: ${Number(res.data.refund_amount).toLocaleString('vi-VN')} đ (50%)\n- Số dư ví mới: ${Number(res.data.new_wallet_balance).toLocaleString('vi-VN')} đ`);
+                currentUser.SoDu = res.data.new_wallet_balance;
+                initAuth();
+                loadMyTickets();
+            } else {
+                alert(`❌ ${res?.message || 'Hủy vé thất bại'}`);
+            }
+        }
+
+        async function loadWalletView() {
+            await updateWalletBalance();
+            const res = await api('wallet/transactions');
+            const container = document.getElementById('walletStatementList');
+            container.innerHTML = '';
+
+            if (res && res.success && res.data.transactions.length > 0) {
+                let html = '<table style="width:100%; border-collapse:collapse; font-size:0.88rem;">';
+                html += '<tr style="background:rgba(0,0,0,0.3); border-bottom:1px solid var(--border);"><th style="padding:12px 16px; text-align:left;">Mã GD</th><th style="padding:12px 16px; text-align:left;">Loại</th><th style="padding:12px 16px; text-align:right;">Biến động</th><th style="padding:12px 16px; text-align:right;">Số dư sau</th><th style="padding:12px 16px; text-align:left;">Thời gian</th><th style="padding:12px 16px; text-align:left;">Ghi chú</th></tr>';
+
+                res.data.transactions.forEach(t => {
+                    const isPlus = t.LoaiGiaoDich === 'NapTien' || t.LoaiGiaoDich === 'HoanTien';
+                    const color = isPlus ? '#34d399' : '#fb7185';
+                    const prefix = isPlus ? '+' : '-';
+
+                    html += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding:12px 16px; font-weight:700;">#${t.MaGiaoDich}</td>
+                        <td style="padding:12px 16px;"><span class="role-tag ${isPlus ? 'role-KhachHang' : 'role-Admin'}">${t.LoaiGiaoDich}</span></td>
+                        <td style="padding:12px 16px; text-align:right; font-weight:700; color:${color}; font-family:'JetBrains Mono',monospace;">${prefix}${Number(t.SoTien).toLocaleString('vi-VN')} đ</td>
+                        <td style="padding:12px 16px; text-align:right; font-family:'JetBrains Mono',monospace;">${Number(t.SoDuSau).toLocaleString('vi-VN')} đ</td>
+                        <td style="padding:12px 16px; color:var(--text-secondary); font-size:0.8rem;">${t.ThoiGian}</td>
+                        <td style="padding:12px 16px; color:var(--text-muted); font-size:0.8rem;">${t.GhiChu || ''}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted);">Chưa có giao dịch biến động số dư nào.</div>';
+            }
+        }
+
+        async function updateWalletBalance() {
+            const res = await api('wallet/balance');
+            if (res && res.success) {
+                currentUser.SoDu = res.data.balance;
+                document.getElementById('userBalanceText').textContent = res.data.formatted_balance;
+                document.getElementById('walletCardBalance').textContent = res.data.formatted_balance;
+                document.getElementById('walletOwnerName').textContent = currentUser.HoTen;
+                document.getElementById('walletOwnerId').textContent = '#' + currentUser.MaTaiKhoan;
+                document.getElementById('copySyntax').textContent = res.data.deposit_syntax;
+            }
+        }
+
+        function setDepositAmount(amount) {
+            document.getElementById('customDepositAmount').value = amount;
+        }
+
+        async function createVietQrDeposit() {
+            if (!currentUser) {
+                openAuthModal();
+                return;
+            }
+            const amount = Number(document.getElementById('customDepositAmount').value);
+            if (isNaN(amount) || amount < 10000) {
+                alert('Vui lòng nhập số tiền nạp tối thiểu là 10.000 đ!');
+                return;
+            }
+
+            const res = await api('wallet/deposit-request', 'POST', { SoTien: amount });
+            if (res && res.success) {
+                openVietQrModal(res.data);
+                loadMyDepositRequests();
+            } else {
+                alert(res?.message || 'Không thể tạo yêu cầu nạp tiền');
+            }
+        }
+
+        function openVietQrModal(data) {
+            document.getElementById('vietQrImageTag').src = data.vietqr_url;
+            document.getElementById('qrBankName').textContent = data.bank_name + ' (VCB)';
+            document.getElementById('qrAccNo').textContent = data.account_no;
+            document.getElementById('qrAccName').textContent = data.account_name;
+            document.getElementById('qrAmountFormatted').textContent = data.amount_formatted;
+            document.getElementById('qrContentText').textContent = data.transfer_content;
+
+            document.getElementById('vietQrModal').classList.add('active');
+        }
+
+        function closeVietQrModal() {
+            document.getElementById('vietQrModal').classList.remove('active');
+        }
+
+        function copyQrText(elementId, label) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert(`Đã sao chép ${label}: ${text}`);
+            }).catch(() => {
+                prompt(`Sao chép ${label}:`, text);
+            });
+        }
+
+        function finishTransferAction() {
+            closeVietQrModal();
+            loadMyDepositRequests();
+            alert('🎉 Yêu cầu nạp tiền đã được gửi tới hệ thống!\nAdmin sẽ kiểm tra giao dịch và duyệt cộng tiền vào ví của bạn trong giây lát.\nBạn có thể theo dõi tiến trình trong bảng "Lịch Sử Yêu Cầu Nạp Tiền".');
+        }
+
+        async function loadMyDepositRequests() {
+            const container = document.getElementById('myDepositRequestsList');
+            if (!container) return;
+
+            const res = await api('wallet/my-deposit-requests');
+            if (res && res.success && res.data.requests.length > 0) {
+                let html = '<table style="width:100%; border-collapse:collapse; font-size:0.88rem;">';
+                html += '<tr style="background:rgba(0,0,0,0.3); border-bottom:1px solid var(--border);"><th style="padding:12px 16px;">Mã Yêu Cầu</th><th style="padding:12px 16px;">Số Tiền</th><th style="padding:12px 16px;">Nội Dung CK</th><th style="padding:12px 16px;">Thời Gian</th><th style="padding:12px 16px;">Trạng Thái</th></tr>';
+
+                res.data.requests.forEach(r => {
+                    let statusBadge = '';
+                    if (r.TrangThai === 'ChoDuyet') {
+                        statusBadge = '<span style="background:rgba(245,158,11,0.2); color:#fbbf24; padding:4px 8px; border-radius:6px; font-weight:700;">⏳ Chờ Admin Duyệt</span>';
+                    } else if (r.TrangThai === 'DaDuyet') {
+                        statusBadge = '<span style="background:rgba(16,185,129,0.2); color:#34d399; padding:4px 8px; border-radius:6px; font-weight:700;">✅ Đã Duyệt (+ Tiền)</span>';
+                    } else {
+                        statusBadge = `<span style="background:rgba(244,63,94,0.2); color:#fb7185; padding:4px 8px; border-radius:6px; font-weight:700;">❌ Từ Chối</span>`;
+                    }
+
+                    html += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding:12px 16px; font-weight:700; color:#38bdf8; font-family:\'JetBrains Mono\',monospace;">${r.MaYeuCauHienThi}</td>
+                        <td style="padding:12px 16px; font-weight:700; color:#34d399; font-family:\'JetBrains Mono\',monospace;">${Number(r.SoTien).toLocaleString('vi-VN')} đ</td>
+                        <td style="padding:12px 16px; color:#cbd5e1; font-family:\'JetBrains Mono\',monospace; font-size:0.8rem;">${r.NoiDungChuyenKhoan}</td>
+                        <td style="padding:12px 16px; color:var(--text-muted); font-size:0.8rem;">${r.NgayTao}</td>
+                        <td style="padding:12px 16px;">${statusBadge}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted);">Bạn chưa tạo yêu cầu nạp tiền nào.</div>';
+            }
+        }
+
+        async function checkAdminPendingBadge() {
+            if (currentUser?.VaiTro !== 'Admin') return;
+            const res = await api('admin/deposit-requests?trang_thai=ChoDuyet');
+            if (res && res.success) {
+                const count = res.data.length;
+                const badge = document.getElementById('adminPendingBadge');
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'inline-block' : 'none';
+                }
+            }
+        }
+
+        async function loadAdminDeposits() {
+            if (currentUser?.VaiTro !== 'Admin') {
+                alert('Chức năng này chỉ dành cho tài khoản Admin!');
+                switchView('home');
+                return;
+            }
+
+            const filter = document.getElementById('adminDepositFilter').value;
+            const container = document.getElementById('adminDepositsListContainer');
+            container.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-secondary);">Đang tải danh sách yêu cầu nạp tiền...</div>';
+
+            const endpoint = 'admin/deposit-requests' + (filter ? `?trang_thai=${filter}` : '');
+            const res = await api(endpoint);
+            container.innerHTML = '';
+
+            if (res && res.success && res.data.length > 0) {
+                let html = '<table style="width:100%; border-collapse:collapse; font-size:0.88rem;">';
+                html += '<tr style="background:rgba(0,0,0,0.3); border-bottom:1px solid var(--border);">' +
+                    '<th style="padding:14px 16px;">Mã YC</th>' +
+                    '<th style="padding:14px 16px;">Khách Hàng</th>' +
+                    '<th style="padding:14px 16px;">Số Tiền Nạp</th>' +
+                    '<th style="padding:14px 16px;">Nội Dung Chuyển Khoản</th>' +
+                    '<th style="padding:14px 16px;">Thời Gian Gửi</th>' +
+                    '<th style="padding:14px 16px;">Trạng Thái</th>' +
+                    '<th style="padding:14px 16px; text-align:center;">Hành Động Admin</th>' +
+                    '</tr>';
+
+                res.data.forEach(item => {
+                    let actionHtml = '';
+                    let statusLabel = '';
+
+                    if (item.TrangThai === 'ChoDuyet') {
+                        statusLabel = '<span style="background:rgba(245,158,11,0.2); color:#fbbf24; padding:4px 8px; border-radius:6px; font-weight:700;">⏳ Chờ Duyệt</span>';
+                        actionHtml = `
+                            <div style="display:flex; gap:6px; justify-content:center;">
+                                <button class="btn btn-sm btn-success" onclick="approveDepositAdmin(${item.MaYeuCau})">✅ Duyệt Nạp</button>
+                                <button class="btn btn-sm btn-danger" onclick="rejectDepositAdmin(${item.MaYeuCau})">❌ Từ Chối</button>
+                            </div>
+                        `;
+                    } else if (item.TrangThai === 'DaDuyet') {
+                        statusLabel = '<span style="background:rgba(16,185,129,0.2); color:#34d399; padding:4px 8px; border-radius:6px; font-weight:700;">✅ Đã Duyệt</span>';
+                        actionHtml = `<span style="font-size:0.75rem; color:#94a3b8;">Duyệt bởi: ${item.TenAdminDuyet || 'Admin'}</span>`;
+                    } else {
+                        statusLabel = '<span style="background:rgba(244,63,94,0.2); color:#fb7185; padding:4px 8px; border-radius:6px; font-weight:700;">❌ Từ Chối</span>';
+                        actionHtml = `<span style="font-size:0.75rem; color:#94a3b8;">Lý do: ${item.GhiChu || 'Không khớp'}</span>`;
+                    }
+
+                    html += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding:14px 16px; font-weight:700; color:#38bdf8; font-family:\'JetBrains Mono\',monospace;">${item.MaYeuCauHienThi}</td>
+                        <td style="padding:14px 16px;">
+                            <b>${item.HoTen}</b><br>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">${item.SoDienThoai} (@${item.TenDangNhap})</span>
+                        </td>
+                        <td style="padding:14px 16px; font-weight:800; color:#34d399; font-size:1.05rem; font-family:\'JetBrains Mono\',monospace;">
+                            +${Number(item.SoTien).toLocaleString('vi-VN')} đ
+                        </td>
+                        <td style="padding:14px 16px; font-family:\'JetBrains Mono\',monospace; color:#fbbf24; font-size:0.85rem;">
+                            ${item.NoiDungChuyenKhoan}
+                        </td>
+                        <td style="padding:14px 16px; color:var(--text-secondary); font-size:0.8rem;">${item.NgayTao}</td>
+                        <td style="padding:14px 16px;">${statusLabel}</td>
+                        <td style="padding:14px 16px; text-align:center;">${actionHtml}</td>
+                    </tr>`;
+                });
+
+                html += '</table>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div style="padding:3rem; text-align:center; color:var(--text-secondary);">Không có yêu cầu nạp tiền nào theo điều kiện lọc.</div>';
+            }
+
+            checkAdminPendingBadge();
+        }
+
+        async function approveDepositAdmin(requestId) {
+            if (!confirm('XÁC NHẬN DUYỆT NẠP TIỀN?\nBạn đã kiểm tra tài khoản ngân hàng (STK 1041002875 - NGUYEN MANH CUONG) và xác nhận đã nhận được tiền từ khách hàng.')) return;
+
+            const res = await api(`admin/deposit-requests/${requestId}/approve`, 'POST');
+            if (res && res.success) {
+                alert(`🎉 ${res.message}\nSố dư mới của khách: ${Number(res.data.new_balance).toLocaleString('vi-VN')} đ`);
+                loadAdminDeposits();
+                updateWalletBalance();
+            } else {
+                alert(`❌ ${res?.message || 'Duyệt thất bại'}`);
+            }
+        }
+
+        async function rejectDepositAdmin(requestId) {
+            const reason = prompt('Nhập lý do từ chối yêu cầu nạp tiền này:', 'Chưa nhận được tiền chuyển khoản hoặc sai cú pháp');
+            if (reason === null) return;
+
+            const res = await api(`admin/deposit-requests/${requestId}/reject`, 'POST', { LyDo: reason });
+            if (res && res.success) {
+                alert('Đã từ chối yêu cầu nạp tiền.');
+                loadAdminDeposits();
+            } else {
+                alert(`❌ ${res?.message || 'Từ chối thất bại'}`);
+            }
+        }
+
+        /* ========================================================
+         * 1. ADMIN: QUẢN LÝ NGƯỜI DÙNG (USERS)
+         * ======================================================== */
+        let allAdminUsersData = [];
+
+        async function loadAdminUsers() {
+            if (currentUser?.VaiTro !== 'Admin') {
+                alert('Chức năng này chỉ dành cho tài khoản Admin!');
+                switchView('home');
+                return;
+            }
+
+            const container = document.getElementById('adminUsersListContainer');
+            container.innerHTML = '<div style="padding:2.5rem; text-align:center; color:var(--text-secondary);">Đang tải danh sách người dùng...</div>';
+
+            const res = await api('admin/users');
+            if (res && res.success) {
+                allAdminUsersData = res.data;
+
+                // Thống kê
+                document.getElementById('statTotalUsers').textContent = allAdminUsersData.length;
+                document.getElementById('statTotalCustomers').textContent = allAdminUsersData.filter(u => u.VaiTro === 'KhachHang').length;
+                document.getElementById('statTotalStaff').textContent = allAdminUsersData.filter(u => u.VaiTro === 'NhanVien').length;
+                document.getElementById('statTotalAdmins').textContent = allAdminUsersData.filter(u => u.VaiTro === 'Admin').length;
+
+                filterAdminUsers();
+            } else {
+                container.innerHTML = `<div style="padding:2.5rem; text-align:center; color:#fb7185;">Lỗi tải dữ liệu: ${res?.message || 'Không có phản hồi'}</div>`;
+            }
+        }
+
+        function filterAdminUsers() {
+            const kw = (document.getElementById('adminUserSearchInput')?.value || '').toLowerCase().trim();
+            const role = document.getElementById('adminUserRoleFilter')?.value || '';
+            const status = document.getElementById('adminUserStatusFilter')?.value || '';
+
+            const filtered = allAdminUsersData.filter(u => {
+                const matchKw = !kw ||
+                    (u.TenDangNhap && u.TenDangNhap.toLowerCase().includes(kw)) ||
+                    (u.HoTen && u.HoTen.toLowerCase().includes(kw)) ||
+                    (u.SoDienThoai && u.SoDienThoai.toLowerCase().includes(kw)) ||
+                    (u.Email && u.Email.toLowerCase().includes(kw));
+
+                const matchRole = !role || u.VaiTro === role;
+                const matchStatus = !status || u.TrangThai === status;
+
+                return matchKw && matchRole && matchStatus;
+            });
+
+            renderAdminUsers(filtered);
+        }
+
+        function renderAdminUsers(list) {
+            const container = document.getElementById('adminUsersListContainer');
+            if (!container) return;
+
+            if (!list || list.length === 0) {
+                container.innerHTML = '<div style="padding:3rem; text-align:center; color:var(--text-secondary);">Không tìm thấy người dùng nào phù hợp với bộ lọc.</div>';
+                return;
+            }
+
+            let html = '<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.88rem; text-align:left;">';
+            html += `<tr style="background:rgba(0,0,0,0.35); border-bottom:1px solid var(--border); color:var(--text-muted);">
+                <th style="padding:14px 16px;">ID</th>
+                <th style="padding:14px 16px;">Tài Khoản & Họ Tên</th>
+                <th style="padding:14px 16px;">Liên Hệ (SĐT / Email)</th>
+                <th style="padding:14px 16px;">Vai Trò</th>
+                <th style="padding:14px 16px;">Số Dư Ví</th>
+                <th style="padding:14px 16px;">Trạng Thái</th>
+                <th style="padding:14px 16px;">Ngày Tạo</th>
+                <th style="padding:14px 16px; text-align:center;">Thao Tác</th>
+            </tr>`;
+
+            list.forEach(u => {
+                let roleBadge = '';
+                if (u.VaiTro === 'Admin') {
+                    roleBadge = '<span style="background:rgba(244,63,94,0.15); color:#fb7185; border:1px solid rgba(244,63,94,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">👑 Quản Trị Viên</span>';
+                } else if (u.VaiTro === 'NhanVien') {
+                    roleBadge = '<span style="background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">💼 Nhân Viên Quầy</span>';
+                } else {
+                    roleBadge = '<span style="background:rgba(168,85,247,0.15); color:#c084fc; border:1px solid rgba(168,85,247,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🎒 Khách Hàng</span>';
+                }
+
+                let statusBadge = u.TrangThai === 'HoatDong'
+                    ? '<span style="background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🟢 Hoạt Động</span>'
+                    : '<span style="background:rgba(244,63,94,0.15); color:#fb7185; border:1px solid rgba(244,63,94,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🔒 Bị Khóa</span>';
+
+                let lockBtnText = u.TrangThai === 'HoatDong' ? '🔒 Khóa' : '🔓 Mở';
+                let lockBtnClass = u.TrangThai === 'HoatDong' ? 'btn-danger' : 'btn-success';
+
+                html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <td style="padding:14px 16px; font-family:'JetBrains Mono',monospace; color:var(--text-muted); font-size:0.8rem;">#${u.MaTaiKhoan}</td>
+                    <td style="padding:14px 16px;">
+                        <b style="color:white; font-size:0.92rem;">${u.HoTen}</b><br>
+                        <span style="font-family:'JetBrains Mono',monospace; color:#38bdf8; font-size:0.8rem;">@${u.TenDangNhap}</span>
+                    </td>
+                    <td style="padding:14px 16px; font-size:0.83rem;">
+                        <div>📞 <b style="color:white;">${u.SoDienThoai}</b></div>
+                        <div style="color:var(--text-secondary);">${u.Email || '<i style="color:var(--text-muted)">Chưa cập nhật</i>'}</div>
+                    </td>
+                    <td style="padding:14px 16px;">${roleBadge}</td>
+                    <td style="padding:14px 16px; font-family:'JetBrains Mono',monospace; font-weight:700; color:#34d399;">
+                        ${Number(u.SoDu || 0).toLocaleString('vi-VN')} đ
+                    </td>
+                    <td style="padding:14px 16px;">${statusBadge}</td>
+                    <td style="padding:14px 16px; color:var(--text-secondary); font-size:0.8rem;">${u.NgayTao ? u.NgayTao.substring(0, 10) : ''}</td>
+                    <td style="padding:14px 16px; text-align:center;">
+                        <div style="display:inline-flex; gap:6px;">
+                            <button class="btn btn-secondary btn-sm" onclick="openEditUserModal(${u.MaTaiKhoan})">✏️ Sửa</button>
+                            <button class="btn ${lockBtnClass} btn-sm" onclick="toggleUserLock(${u.MaTaiKhoan}, '${u.TrangThai}', '${u.HoTen}')">${lockBtnText}</button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+
+            html += '</table></div>';
+            container.innerHTML = html;
+        }
+
+        function openCreateUserModal() {
+            document.getElementById('adminUserModalTitle').textContent = '➕ Thêm Người Dùng Mới';
+            document.getElementById('formAdminUserId').value = '';
+
+            const uInput = document.getElementById('formAdminUsername');
+            uInput.value = '';
+            uInput.disabled = false;
+
+            document.getElementById('formAdminPassword').value = '123456';
+            document.getElementById('formAdminFullName').value = '';
+            document.getElementById('formAdminPhone').value = '';
+            document.getElementById('formAdminEmail').value = '';
+            document.getElementById('formAdminRole').value = 'KhachHang';
+            document.getElementById('formAdminStatus').value = 'HoatDong';
+
+            document.getElementById('adminUserModal').classList.add('active');
+        }
+
+        function openEditUserModal(userId) {
+            const user = allAdminUsersData.find(u => u.MaTaiKhoan === userId);
+            if (!user) return;
+
+            document.getElementById('adminUserModalTitle').textContent = `✏️ Cập Nhật Người Dùng: ${user.HoTen}`;
+            document.getElementById('formAdminUserId').value = user.MaTaiKhoan;
+
+            const uInput = document.getElementById('formAdminUsername');
+            uInput.value = user.TenDangNhap;
+            uInput.disabled = true;
+
+            document.getElementById('formAdminPassword').value = ''; // Để trống nếu không đổi
+            document.getElementById('formAdminFullName').value = user.HoTen;
+            document.getElementById('formAdminPhone').value = user.SoDienThoai;
+            document.getElementById('formAdminEmail').value = user.Email || '';
+            document.getElementById('formAdminRole').value = user.VaiTro;
+            document.getElementById('formAdminStatus').value = user.TrangThai;
+
+            document.getElementById('adminUserModal').classList.add('active');
+        }
+
+        function closeAdminUserModal() {
+            document.getElementById('adminUserModal').classList.remove('active');
+        }
+
+        async function submitAdminUserForm() {
+            const id = document.getElementById('formAdminUserId').value;
+            const u = document.getElementById('formAdminUsername').value.trim();
+            const p = document.getElementById('formAdminPassword').value.trim();
+            const name = document.getElementById('formAdminFullName').value.trim();
+            const phone = document.getElementById('formAdminPhone').value.trim();
+            const email = document.getElementById('formAdminEmail').value.trim();
+            const role = document.getElementById('formAdminRole').value;
+            const status = document.getElementById('formAdminStatus').value;
+
+            if (!name || !phone) {
+                alert('Vui lòng nhập Họ tên và Số điện thoại!');
+                return;
+            }
+
+            if (!id && (!u || !p)) {
+                alert('Vui lòng nhập Tên đăng nhập và Mật khẩu khởi tạo!');
+                return;
+            }
+
+            const payload = {
+                TenDangNhap: u,
+                HoTen: name,
+                SoDienThoai: phone,
+                Email: email,
+                VaiTro: role,
+                TrangThai: status
+            };
+            if (p) payload.MatKhau = p;
+
+            let res;
+            if (id) {
+                res = await api(`admin/users/${id}`, 'PUT', payload);
+            } else {
+                res = await api('admin/users', 'POST', payload);
+            }
+
+            if (res && res.success) {
+                alert(`🎉 ${res.message || 'Lưu thông tin người dùng thành công!'}`);
+                closeAdminUserModal();
+                loadAdminUsers();
+            } else {
+                alert(`❌ ${res?.message || 'Thao tác thất bại'}`);
+            }
+        }
+
+        async function toggleUserLock(userId, currentStatus, name) {
+            const isLocking = currentStatus === 'HoatDong';
+            const actionText = isLocking ? 'KHÓA' : 'MỞ KHÓA';
+            if (!confirm(`Bạn có chắc chắn muốn ${actionText} tài khoản của "${name}" (#${userId})?`)) return;
+
+            const newStatus = isLocking ? 'BiKhoa' : 'HoatDong';
+            const res = await api(`admin/users/${userId}`, 'PUT', { TrangThai: newStatus });
+            if (res && res.success) {
+                alert(`Đã ${actionText.toLowerCase()} tài khoản thành công!`);
+                loadAdminUsers();
+            } else {
+                alert(`❌ ${res?.message || 'Cập nhật thất bại'}`);
+            }
+        }
+
+
+        /* ========================================================
+         * 2. ADMIN: QUẢN LÝ CHUYẾN ĐI (TRIPS)
+         * ======================================================== */
+        let allAdminTripsData = [];
+        let allAdminRoutesData = [];
+        let allAdminBusesDropdown = [];
+
+        async function loadAdminTrips() {
+            if (currentUser?.VaiTro !== 'Admin') {
+                alert('Chức năng này chỉ dành cho tài khoản Admin!');
+                switchView('home');
+                return;
+            }
+
+            const container = document.getElementById('adminTripsListContainer');
+            container.innerHTML = '<div style="padding:2.5rem; text-align:center; color:var(--text-secondary);">Đang tải danh sách chuyến xe...</div>';
+
+            const res = await api('admin/trips');
+            if (res && res.success) {
+                allAdminTripsData = res.data;
+
+                // Thống kê
+                document.getElementById('statTotalTrips').textContent = allAdminTripsData.length;
+                document.getElementById('statSapChayTrips').textContent = allAdminTripsData.filter(t => t.TrangThai === 'SapChay').length;
+                document.getElementById('statDangChayTrips').textContent = allAdminTripsData.filter(t => t.TrangThai === 'DangChay').length;
+                document.getElementById('statHoanThanhTrips').textContent = allAdminTripsData.filter(t => t.TrangThai === 'HoanThanh').length;
+                document.getElementById('statHuyTrips').textContent = allAdminTripsData.filter(t => t.TrangThai === 'HuyChuyen').length;
+
+                filterAdminTrips();
+            } else {
+                container.innerHTML = `<div style="padding:2.5rem; text-align:center; color:#fb7185;">Lỗi tải chuyến đi: ${res?.message || 'Không có phản hồi'}</div>`;
+            }
+        }
+
+        function filterAdminTrips() {
+            const kw = (document.getElementById('adminTripSearchInput')?.value || '').toLowerCase().trim();
+            const status = document.getElementById('adminTripStatusFilter')?.value || '';
+            const date = document.getElementById('adminTripDateFilter')?.value || '';
+
+            const filtered = allAdminTripsData.filter(t => {
+                const matchKw = !kw ||
+                    (t.TenTuyen && t.TenTuyen.toLowerCase().includes(kw)) ||
+                    (t.BienSo && t.BienSo.toLowerCase().includes(kw)) ||
+                    (t.TenXe && t.TenXe.toLowerCase().includes(kw));
+
+                const matchStatus = !status || t.TrangThai === status;
+                const matchDate = !date || (t.ThoiGianDi && t.ThoiGianDi.startsWith(date));
+
+                return matchKw && matchStatus && matchDate;
+            });
+
+            renderAdminTrips(filtered);
+        }
+
+        function renderAdminTrips(list) {
+            const container = document.getElementById('adminTripsListContainer');
+            if (!container) return;
+
+            if (!list || list.length === 0) {
+                container.innerHTML = '<div style="padding:3rem; text-align:center; color:var(--text-secondary);">Không tìm thấy chuyến xe nào phù hợp với bộ lọc.</div>';
+                return;
+            }
+
+            let html = '<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.88rem; text-align:left;">';
+            html += `<tr style="background:rgba(0,0,0,0.35); border-bottom:1px solid var(--border); color:var(--text-muted);">
+                <th style="padding:14px 16px;">Mã Chuyến</th>
+                <th style="padding:14px 16px;">Tuyến Xe</th>
+                <th style="padding:14px 16px;">Phương Tiện</th>
+                <th style="padding:14px 16px;">Khởi Hành & Đến</th>
+                <th style="padding:14px 16px;">Giá Vé BR-09</th>
+                <th style="padding:14px 16px;">Tiến Độ Đặt Chỗ</th>
+                <th style="padding:14px 16px;">Trạng Thái</th>
+                <th style="padding:14px 16px; text-align:center;">Thao Tác</th>
+            </tr>`;
+
+            list.forEach(t => {
+                let statusBadge = '';
+                if (t.TrangThai === 'SapChay') {
+                    statusBadge = '<span style="background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">⏳ Sắp Chạy</span>';
+                } else if (t.TrangThai === 'DangChay') {
+                    statusBadge = '<span style="background:rgba(52,211,153,0.15); color:#34d399; border:1px solid rgba(52,211,153,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🟢 Đang Chạy</span>';
+                } else if (t.TrangThai === 'HoanThanh') {
+                    statusBadge = '<span style="background:rgba(99,102,241,0.15); color:#818cf8; border:1px solid rgba(99,102,241,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🏁 Hoàn Thành</span>';
+                } else {
+                    statusBadge = '<span style="background:rgba(244,63,94,0.15); color:#fb7185; border:1px solid rgba(244,63,94,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🚫 Đã Hủy</span>';
+                }
+
+                const booked = Number(t.SoGheDaDat || 0);
+                const totalSeats = Number(t.SoLuongGhe || 24);
+                const percent = Math.min(100, Math.round((booked / totalSeats) * 100));
+
+                let cancelBtn = '';
+                if (t.TrangThai === 'SapChay') {
+                    cancelBtn = `<button class="btn btn-danger btn-sm" onclick="quickCancelTrip(${t.MaChuyen})">🚫 Hủy</button>`;
+                }
+
+                html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <td style="padding:14px 16px; font-family:'JetBrains Mono',monospace; color:#38bdf8; font-weight:700;">#${t.MaChuyen}</td>
+                    <td style="padding:14px 16px;">
+                        <b style="color:white; font-size:0.92rem;">${t.TenTuyen}</b><br>
+                        <span style="font-size:0.78rem; color:var(--text-muted);">${t.TenDiemDi} ➔ ${t.TenDiemDen}</span>
+                    </td>
+                    <td style="padding:14px 16px;">
+                        <div style="margin-bottom:4px;">
+                            <span style="background:#ffffff; color:#0f172a; border:2px solid #334155; border-radius:4px; padding:2px 7px; font-weight:900; font-family:'JetBrains Mono',monospace; font-size:0.8rem;">${t.BienSo}</span>
+                        </div>
+                        <span style="font-size:0.8rem; color:var(--text-secondary);">${t.TenXe}</span>
+                    </td>
+                    <td style="padding:14px 16px; font-size:0.82rem;">
+                        <div>🛫 Đi: <b style="color:#38bdf8;">${t.ThoiGianDi}</b></div>
+                        <div>🛬 Đến: <span style="color:var(--text-muted);">${t.ThoiGianDen}</span></div>
+                    </td>
+                    <td style="padding:14px 16px; font-family:'JetBrains Mono',monospace; font-weight:800; color:#34d399; font-size:1rem;">
+                        ${Number(t.GiaVe).toLocaleString('vi-VN')} đ
+                    </td>
+                    <td style="padding:14px 16px; min-width:140px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.78rem; margin-bottom:4px;">
+                            <b style="color:${booked > 0 ? '#38bdf8' : 'var(--text-muted)'};">${booked}/${totalSeats} ghế</b>
+                            <span style="color:var(--text-secondary);">${percent}%</span>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.08); height:6px; border-radius:999px; overflow:hidden;">
+                            <div style="background:linear-gradient(90deg, #38bdf8, #34d399); width:${percent}%; height:100%;"></div>
+                        </div>
+                    </td>
+                    <td style="padding:14px 16px;">${statusBadge}</td>
+                    <td style="padding:14px 16px; text-align:center;">
+                        <div style="display:inline-flex; gap:6px;">
+                            <button class="btn btn-secondary btn-sm" onclick="openEditTripModal(${t.MaChuyen})">✏️ Sửa</button>
+                            <button class="btn btn-secondary btn-sm" style="background:rgba(99,102,241,0.2); color:#a5b4fc;" onclick="openTripSeatsModal(${t.MaChuyen})">💺 Ghế</button>
+                            ${cancelBtn}
+                        </div>
+                    </td>
+                </tr>`;
+            });
+
+            html += '</table></div>';
+            container.innerHTML = html;
+        }
+
+        async function ensureRoutesAndBusesLoaded() {
+            if (allAdminRoutesData.length === 0) {
+                const resRoutes = await api('admin/routes');
+                if (resRoutes && resRoutes.success) {
+                    allAdminRoutesData = resRoutes.data;
+                    const routeSelect = document.getElementById('formAdminTripRoute');
+                    routeSelect.innerHTML = '<option value="">-- Chọn tuyến xe --</option>';
+                    allAdminRoutesData.forEach(r => {
+                        const opt = document.createElement('option');
+                        opt.value = r.MaTuyenXe;
+                        opt.textContent = `${r.TenTuyen} (${r.TenDiemDi} -> ${r.TenDiemDen})`;
+                        routeSelect.appendChild(opt);
+                    });
+                }
+            }
+
+            const resBuses = await api('admin/buses');
+            if (resBuses && resBuses.success) {
+                allAdminBusesDropdown = resBuses.data;
+                const busSelect = document.getElementById('formAdminTripBus');
+                busSelect.innerHTML = '<option value="">-- Chọn xe phục vụ --</option>';
+                allAdminBusesDropdown.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b.MaXe;
+                    opt.textContent = `[${b.BienSo}] ${b.TenXe} (${b.LoaiXe} - ${b.SoLuongGhe} ghế) - ${b.TrangThai}`;
+                    busSelect.appendChild(opt);
+                });
+            }
+        }
+
+        async function openCreateTripModal() {
+            document.getElementById('adminTripModalTitle').textContent = '➕ Tạo Chuyến Đi Mới';
+            document.getElementById('formAdminTripId').value = '';
+
+            await ensureRoutesAndBusesLoaded();
+
+            // Set default departure tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(8, 0, 0, 0);
+            const depIso = new Date(tomorrow.getTime() - tomorrow.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+
+            tomorrow.setHours(14, 0, 0, 0);
+            const arrIso = new Date(tomorrow.getTime() - tomorrow.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+
+            document.getElementById('formAdminTripDepTime').value = depIso;
+            document.getElementById('formAdminTripArrTime').value = arrIso;
+            document.getElementById('formAdminTripPrice').value = '250000';
+            document.getElementById('formAdminTripStatus').value = 'SapChay';
+
+            document.getElementById('adminTripModal').classList.add('active');
+        }
+
+        async function openEditTripModal(tripId) {
+            const trip = allAdminTripsData.find(t => t.MaChuyen === tripId);
+            if (!trip) return;
+
+            document.getElementById('adminTripModalTitle').textContent = `✏️ Cập Nhật Chuyến Xe #${trip.MaChuyen}`;
+            document.getElementById('formAdminTripId').value = trip.MaChuyen;
+
+            await ensureRoutesAndBusesLoaded();
+
+            document.getElementById('formAdminTripRoute').value = trip.MaTuyenXe;
+            document.getElementById('formAdminTripBus').value = trip.MaXe;
+            document.getElementById('formAdminTripDepTime').value = trip.ThoiGianDi ? trip.ThoiGianDi.replace(' ', 'T').substring(0, 16) : '';
+            document.getElementById('formAdminTripArrTime').value = trip.ThoiGianDen ? trip.ThoiGianDen.replace(' ', 'T').substring(0, 16) : '';
+            document.getElementById('formAdminTripPrice').value = trip.GiaVe;
+            document.getElementById('formAdminTripStatus').value = trip.TrangThai;
+
+            document.getElementById('adminTripModal').classList.add('active');
+        }
+
+        function closeAdminTripModal() {
+            document.getElementById('adminTripModal').classList.remove('active');
+        }
+
+        async function submitAdminTripForm() {
+            const id = document.getElementById('formAdminTripId').value;
+            const routeId = Number(document.getElementById('formAdminTripRoute').value);
+            const busId = Number(document.getElementById('formAdminTripBus').value);
+            const depTime = document.getElementById('formAdminTripDepTime').value.replace('T', ' ');
+            const arrTime = document.getElementById('formAdminTripArrTime').value.replace('T', ' ');
+            const price = Number(document.getElementById('formAdminTripPrice').value);
+            const status = document.getElementById('formAdminTripStatus').value;
+
+            if (!routeId || !busId || !depTime || !arrTime || price <= 0) {
+                alert('Vui lòng chọn tuyến, xe, giờ xuất phát, giờ đến và giá vé hợp lệ (> 0)!');
+                return;
+            }
+
+            const payload = {
+                MaTuyenXe: routeId,
+                MaXe: busId,
+                ThoiGianDi: depTime,
+                ThoiGianDen: arrTime,
+                GiaVe: price,
+                TrangThai: status
+            };
+
+            let res;
+            if (id) {
+                res = await api(`admin/trips/${id}`, 'PUT', payload);
+            } else {
+                res = await api('admin/trips', 'POST', payload);
+            }
+
+            if (res && res.success) {
+                alert(`🎉 ${res.message || 'Lưu chuyến xe thành công!'}`);
+                closeAdminTripModal();
+                loadAdminTrips();
+            } else {
+                alert(`❌ ${res?.message || 'Lưu chuyến đi thất bại'}`);
+            }
+        }
+
+        async function quickCancelTrip(tripId) {
+            if (!confirm(`XÁC NHẬN HỦY CHUYẾN XE #${tripId}?\nCác vé đã đặt sẽ cần được thông báo và xử lý hoàn trả.`)) return;
+
+            const res = await api(`admin/trips/${tripId}`, 'PUT', { TrangThai: 'HuyChuyen' });
+            if (res && res.success) {
+                alert(`Đã hủy chuyến #${tripId} thành công.`);
+                loadAdminTrips();
+            } else {
+                alert(`❌ ${res?.message || 'Hủy chuyến thất bại'}`);
+            }
+        }
+
+        async function openTripSeatsModal(tripId) {
+            const res = await api(`trips/${tripId}/seats`);
+            if (!res || !res.success) {
+                alert('Không thể tải sơ đồ ghế chuyến này!');
+                return;
+            }
+
+            const trip = res.data.trip;
+            const seats = res.data.seats;
+
+            document.getElementById('adminTripSeatsModalTitle').textContent = `Sơ Đồ Ghế: Chuyến #${trip.MaChuyen} (${trip.BienSo})`;
+            document.getElementById('adminTripSeatsSubtitle').textContent = `${trip.TenTuyen} • Khởi hành: ${trip.ThoiGianDi} • Giá: ${Number(trip.GiaVe).toLocaleString('vi-VN')} đ`;
+
+            const f1 = document.getElementById('adminFloor1Seats');
+            const f2 = document.getElementById('adminFloor2Seats');
+            
+            const f1Seats = seats.filter(s => s.Tang == 1);
+            const f2Seats = seats.filter(s => s.Tang == 2);
+
+            const renderFloorAdmin = (container, floorSeats) => {
+                container.innerHTML = '';
+                container.style.display = 'grid';
+                container.style.gridTemplateColumns = '1fr 1fr';
+                container.style.gap = '10px';
+
+                const half = Math.ceil(floorSeats.length / 2);
+                const leftRow = floorSeats.slice(0, half);
+                const rightRow = floorSeats.slice(half);
+
+                const createCol = (title, rowSeats) => {
+                    const col = document.createElement('div');
+                    col.innerHTML = `<div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-align:center; margin-bottom:6px; background:rgba(255,255,255,0.03); padding:3px; border-radius:4px;">${title}</div>`;
+                    const list = document.createElement('div');
+                    list.style.display = 'flex';
+                    list.style.flexDirection = 'column';
+                    list.style.gap = '6px';
+                    rowSeats.forEach(s => {
+                        const isBooked = s.TrangThaiDat === 'DaDat';
+                        const box = document.createElement('div');
+                        box.style.padding = '6px 4px';
+                        box.style.borderRadius = '6px';
+                        box.style.textAlign = 'center';
+                        box.style.fontSize = '0.78rem';
+                        box.style.fontWeight = '700';
+                        if (isBooked) {
+                            box.style.background = 'rgba(244,63,94,0.18)';
+                            box.style.border = '1px solid rgba(244,63,94,0.4)';
+                            box.style.color = '#fb7185';
+                            box.innerHTML = `${s.SoGhe} <span style="font-size:0.65rem; opacity:0.8;">(Đã Đặt)</span>`;
+                        } else {
+                            box.style.background = 'rgba(16,185,129,0.18)';
+                            box.style.border = '1px solid rgba(16,185,129,0.4)';
+                            box.style.color = '#34d399';
+                            box.innerHTML = `${s.SoGhe} <span style="font-size:0.65rem; opacity:0.8;">(Trống)</span>`;
+                        }
+                        list.appendChild(box);
+                    });
+                    col.appendChild(list);
+                    return col;
+                };
+
+                container.appendChild(createCol(`⬅️ HÀNG TRÁI (${leftRow.length} Chỗ)`, leftRow));
+                container.appendChild(createCol(`HÀNG PHẢI (${rightRow.length} Chỗ) ➡️`, rightRow));
+            };
+
+            renderFloorAdmin(f1, f1Seats);
+            renderFloorAdmin(f2, f2Seats);
+
+            document.getElementById('adminTripSeatsModal').classList.add('active');
+        }
+
+        function closeAdminTripSeatsModal() {
+            document.getElementById('adminTripSeatsModal').classList.remove('active');
+        }
+
+
+        /* ========================================================
+         * 3. ADMIN: QUẢN LÝ XE & GHẾ (BUSES & SEATS - UC-11)
+         * ======================================================== */
+        let allAdminBusesData = [];
+
+        async function loadAdminBuses() {
+            if (currentUser?.VaiTro !== 'Admin') {
+                alert('Chức năng này chỉ dành cho tài khoản Admin!');
+                switchView('home');
+                return;
+            }
+
+            const container = document.getElementById('adminBusesListContainer');
+            container.innerHTML = '<div style="padding:2.5rem; text-align:center; color:var(--text-secondary);">Đang tải danh sách phương tiện xe...</div>';
+
+            const res = await api('admin/buses');
+            if (res && res.success) {
+                allAdminBusesData = res.data;
+
+                // Thống kê
+                document.getElementById('statTotalBuses').textContent = allAdminBusesData.length;
+                document.getElementById('statActiveBuses').textContent = allAdminBusesData.filter(b => b.TrangThai === 'HoatDong').length;
+                document.getElementById('statMaintenanceBuses').textContent = allAdminBusesData.filter(b => b.TrangThai === 'BaoTri').length;
+                document.getElementById('statStoppedBuses').textContent = allAdminBusesData.filter(b => b.TrangThai === 'NgungHoatDong').length;
+
+                filterAdminBuses();
+            } else {
+                container.innerHTML = `<div style="padding:2.5rem; text-align:center; color:#fb7185;">Lỗi tải dữ liệu xe: ${res?.message || 'Không có phản hồi'}</div>`;
+            }
+        }
+
+        function filterAdminBuses() {
+            const kw = (document.getElementById('adminBusSearchInput')?.value || '').toLowerCase().trim();
+            const type = document.getElementById('adminBusTypeFilter')?.value || '';
+            const status = document.getElementById('adminBusStatusFilter')?.value || '';
+
+            const filtered = allAdminBusesData.filter(b => {
+                const matchKw = !kw ||
+                    (b.BienSo && b.BienSo.toLowerCase().includes(kw)) ||
+                    (b.TenXe && b.TenXe.toLowerCase().includes(kw));
+
+                const matchType = !type || b.LoaiXe === type;
+                const matchStatus = !status || b.TrangThai === status;
+
+                return matchKw && matchType && matchStatus;
+            });
+
+            renderAdminBuses(filtered);
+        }
+
+        function renderAdminBuses(list) {
+            const container = document.getElementById('adminBusesListContainer');
+            if (!container) return;
+
+            if (!list || list.length === 0) {
+                container.innerHTML = '<div style="padding:3rem; text-align:center; color:var(--text-secondary);">Không tìm thấy xe nào phù hợp với bộ lọc.</div>';
+                return;
+            }
+
+            let html = '<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.88rem; text-align:left;">';
+            html += `<tr style="background:rgba(0,0,0,0.35); border-bottom:1px solid var(--border); color:var(--text-muted);">
+                <th style="padding:14px 16px;">Mã Xe</th>
+                <th style="padding:14px 16px;">Biển Số Kiểm Soát</th>
+                <th style="padding:14px 16px;">Tên Xe & Mẫu Xe</th>
+                <th style="padding:14px 16px;">Loại Phương Tiện</th>
+                <th style="padding:14px 16px;">Số Ghế Khai Báo</th>
+                <th style="padding:14px 16px;">Trạng Thái</th>
+                <th style="padding:14px 16px; text-align:center;">Thao Tác</th>
+            </tr>`;
+
+            list.forEach(b => {
+                let statusBadge = '';
+                if (b.TrangThai === 'HoatDong') {
+                    statusBadge = '<span style="background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🟢 Hoạt Động</span>';
+                } else if (b.TrangThai === 'BaoTri') {
+                    statusBadge = '<span style="background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🛠️ Đang Bảo Trì</span>';
+                } else {
+                    statusBadge = '<span style="background:rgba(244,63,94,0.15); color:#fb7185; border:1px solid rgba(244,63,94,0.3); padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.78rem;">🛑 Ngưng Hoạt Động</span>';
+                }
+
+                let typeLabel = b.LoaiXe === 'GiuongNam' ? '🛏️ Giường Nằm 2 Tầng' : (b.LoaiXe === 'Limousine' ? '⭐ Limousine VIP' : '💺 Ghế Ngồi');
+
+                html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <td style="padding:14px 16px; font-family:'JetBrains Mono',monospace; color:var(--text-muted); font-size:0.8rem;">#${b.MaXe}</td>
+                    <td style="padding:14px 16px;">
+                        <span style="background:#ffffff; color:#0f172a; border:2px solid #334155; border-radius:6px; padding:3px 10px; font-weight:900; font-family:'JetBrains Mono',monospace; font-size:0.92rem; box-shadow:0 2px 6px rgba(0,0,0,0.4); display:inline-block;">
+                            ${b.BienSo}
+                        </span>
+                    </td>
+                    <td style="padding:14px 16px;">
+                        <b style="color:white; font-size:0.92rem;">${b.TenXe}</b>
+                    </td>
+                    <td style="padding:14px 16px;">
+                        <span style="background:rgba(255,255,255,0.06); padding:4px 8px; border-radius:6px; font-size:0.8rem;">${typeLabel}</span>
+                    </td>
+                    <td style="padding:14px 16px; font-family:'JetBrains Mono',monospace; font-weight:700; color:#38bdf8;">
+                        ${b.SoLuongGhe} chỗ (${b.TongSoGheKhaiBao || b.SoLuongGhe} ghế vật lý)
+                    </td>
+                    <td style="padding:14px 16px;">${statusBadge}</td>
+                    <td style="padding:14px 16px; text-align:center;">
+                        <div style="display:inline-flex; gap:6px;">
+                            <button class="btn btn-secondary btn-sm" onclick="openEditBusModal(${b.MaXe})">✏️ Sửa</button>
+                            <button class="btn btn-secondary btn-sm" style="background:rgba(52,211,153,0.18); color:#34d399;" onclick="openBusSeatsModal(${b.MaXe})">💺 Ghế Xe</button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+
+            html += '</table></div>';
+            container.innerHTML = html;
+        }
+
+        function openCreateBusModal() {
+            document.getElementById('adminBusModalTitle').textContent = '➕ Khai Báo Xe Mới (UC-11)';
+            document.getElementById('formAdminBusId').value = '';
+            document.getElementById('formAdminBusPlate').value = '';
+            document.getElementById('formAdminBusName').value = '';
+            document.getElementById('formAdminBusType').value = 'GiuongNam';
+            document.getElementById('formAdminBusSeatCount').value = '24';
+            document.getElementById('formAdminBusStatus').value = 'HoatDong';
+
+            // Show seat count wrapper when creating
+            document.getElementById('formAdminBusSeatCountWrapper').style.display = 'block';
+
+            document.getElementById('adminBusModal').classList.add('active');
+        }
+
+        function openEditBusModal(busId) {
+            const bus = allAdminBusesData.find(b => b.MaXe === busId);
+            if (!bus) return;
+
+            document.getElementById('adminBusModalTitle').textContent = `✏️ Cập Nhật Xe: ${bus.BienSo}`;
+            document.getElementById('formAdminBusId').value = bus.MaXe;
+            document.getElementById('formAdminBusPlate').value = bus.BienSo;
+            document.getElementById('formAdminBusName').value = bus.TenXe;
+            document.getElementById('formAdminBusType').value = bus.LoaiXe;
+            document.getElementById('formAdminBusStatus').value = bus.TrangThai;
+
+            // Hide seat count when editing because physical seats are already generated
+            document.getElementById('formAdminBusSeatCountWrapper').style.display = 'none';
+
+            document.getElementById('adminBusModal').classList.add('active');
+        }
+
+        function closeAdminBusModal() {
+            document.getElementById('adminBusModal').classList.remove('active');
+        }
+
+        async function submitAdminBusForm() {
+            const id = document.getElementById('formAdminBusId').value;
+            const plate = document.getElementById('formAdminBusPlate').value.trim().toUpperCase();
+            const name = document.getElementById('formAdminBusName').value.trim();
+            const type = document.getElementById('formAdminBusType').value;
+            const seatCount = Number(document.getElementById('formAdminBusSeatCount').value);
+            const status = document.getElementById('formAdminBusStatus').value;
+
+            if (!plate || !name) {
+                alert('Vui lòng nhập Biển số và Tên xe!');
+                return;
+            }
+
+            let res;
+            if (id) {
+                res = await api(`admin/buses/${id}`, 'PUT', {
+                    BienSo: plate,
+                    TenXe: name,
+                    LoaiXe: type,
+                    TrangThai: status
+                });
+            } else {
+                res = await api('admin/buses', 'POST', {
+                    BienSo: plate,
+                    TenXe: name,
+                    LoaiXe: type,
+                    SoLuongGhe: seatCount
+                });
+            }
+
+            if (res && res.success) {
+                alert(`🎉 ${res.message || 'Lưu phương tiện xe thành công!'}`);
+                closeAdminBusModal();
+                loadAdminBuses();
+            } else {
+                alert(`❌ ${res?.message || 'Lưu thông tin xe thất bại'}`);
+            }
+        }
+
+        async function openBusSeatsModal(busId) {
+            const res = await api(`admin/buses/${busId}/seats`);
+            if (!res || !res.success) {
+                alert('Không thể tải danh sách ghế của xe này!');
+                return;
+            }
+
+            const bus = res.data.bus;
+            const seats = res.data.seats;
+
+            document.getElementById('adminBusSeatsModalTitle').textContent = `Danh Mục Ghế: ${bus.TenXe} (${bus.BienSo})`;
+            document.getElementById('adminBusSeatsSubtitle').textContent = `Tổng cộng ${seats.length} ghế vật lý được tự động cấu hình theo chuẩn UC-11`;
+
+            const container = document.getElementById('adminBusSeatsListContainer');
+            container.innerHTML = '';
+
+            const f1Seats = seats.filter(s => s.Tang == 1);
+            const f2Seats = seats.filter(s => s.Tang == 2);
+
+            const renderBusFloorGrid = (floorSeats, floorColor) => {
+                const half = Math.ceil(floorSeats.length / 2);
+                const leftRow = floorSeats.slice(0, half);
+                const rightRow = floorSeats.slice(half);
+                return `
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div>
+                            <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-align:center; margin-bottom:6px; background:rgba(255,255,255,0.04); padding:3px; border-radius:4px;">
+                                ⬅️ HÀNG TRÁI (${leftRow.length} Chỗ)
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                ${leftRow.map(s => `
+                                    <div style="background:${floorColor}15; border:1px solid ${floorColor}40; border-radius:8px; padding:6px 4px; text-align:center;">
+                                        <b style="color:${floorColor}; font-family:'JetBrains Mono',monospace; font-size:0.85rem;">${s.SoGhe}</b>
+                                        <span style="font-size:0.65rem; color:var(--text-muted); margin-left:4px;">(${s.TrangThai})</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-align:center; margin-bottom:6px; background:rgba(255,255,255,0.04); padding:3px; border-radius:4px;">
+                                HÀNG PHẢI (${rightRow.length} Chỗ) ➡️
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                ${rightRow.map(s => `
+                                    <div style="background:${floorColor}15; border:1px solid ${floorColor}40; border-radius:8px; padding:6px 4px; text-align:center;">
+                                        <b style="color:${floorColor}; font-family:'JetBrains Mono',monospace; font-size:0.85rem;">${s.SoGhe}</b>
+                                        <span style="font-size:0.65rem; color:var(--text-muted); margin-left:4px;">(${s.TrangThai})</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            let html = `
+                <div style="display:flex; gap:1.5rem;">
+                    <div style="flex:1; background:rgba(15,23,42,0.6); border:1px solid var(--border); border-radius:14px; padding:1rem;">
+                        <div style="text-align:center; font-weight:700; font-size:0.85rem; color:#38bdf8; margin-bottom:10px;">
+                            TẦNG 1 - DÃY A (${f1Seats.length} chỗ)
+                        </div>
+                        ${renderBusFloorGrid(f1Seats, '#38bdf8')}
+                    </div>
+                    <div style="flex:1; background:rgba(15,23,42,0.6); border:1px solid var(--border); border-radius:14px; padding:1rem;">
+                        <div style="text-align:center; font-weight:700; font-size:0.85rem; color:#a855f7; margin-bottom:10px;">
+                            TẦNG 2 - DÃY B (${f2Seats.length} chỗ)
+                        </div>
+                        ${renderBusFloorGrid(f2Seats, '#a855f7')}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            document.getElementById('adminBusSeatsModal').classList.add('active');
+        }
+
+        function closeAdminBusSeatsModal() {
+            document.getElementById('adminBusSeatsModal').classList.remove('active');
+        }
+
+        async function loadCounterSeats() {
+            const tripId = document.getElementById('counterTripSelect').value;
+            const container = document.getElementById('counterSeatBoxes');
+            container.innerHTML = 'Đang tải ghế...';
+
+            const res = await api(`trips/${tripId}/seats`);
+            container.innerHTML = '';
+
+            if (res && res.success) {
+                const availableSeats = res.data.seats.filter(s => s.TrangThaiDat === 'ConTrong');
+                availableSeats.forEach(s => {
+                    const label = document.createElement('label');
+                    label.style.display = 'inline-flex';
+                    label.style.alignItems = 'center';
+                    label.style.gap = '4px';
+                    label.style.background = 'rgba(16,185,129,0.15)';
+                    label.style.padding = '4px 8px';
+                    label.style.borderRadius = '6px';
+                    label.style.fontSize = '0.8rem';
+                    label.style.cursor = 'pointer';
+                    label.innerHTML = `<input type="checkbox" value="${s.MaGhe}" class="counter-seat-chk"> ${s.SoGhe}`;
+                    container.appendChild(label);
+                });
+            }
+        }
+
+        async function submitCounterBooking() {
+            const chks = document.querySelectorAll('.counter-seat-chk:checked');
+            const seatIds = Array.from(chks).map(c => Number(c.value));
+
+            if (seatIds.length === 0) {
+                alert('Vui lòng chọn ít nhất 1 ghế cho khách!');
+                return;
+            }
+
+            const payload = {
+                MaChuyen: Number(document.getElementById('counterTripSelect').value),
+                DanhSachMaGhe: seatIds,
+                TenKhachHang: document.getElementById('counterCustName').value,
+                SoDienThoaiKhach: document.getElementById('counterCustPhone').value,
+                PhuongThucThanhToan: document.getElementById('counterPayMethod').value
+            };
+
+            const res = await api('counter/create-booking', 'POST', payload);
+            if (res && res.success) {
+                alert(`🎉 TẠO ĐƠN TẠI QUẦY THÀNH CÔNG (UC-07)!\n- Mã đơn: ${res.data.booking_code} (ID: ${res.data.booking_id})\n- Mã vé: ${res.data.ticket_code} (ID: ${res.data.ticket_id})\n- Trạng thái thanh toán: ${res.data.payment_status}`);
+                document.getElementById('quickConfirmOrderId').value = res.data.booking_id;
+                document.getElementById('quickPrintTicketId').value = res.data.ticket_id;
+                loadCounterSeats();
+            } else {
+                alert(`❌ ${res?.message || 'Tạo đơn quầy thất bại'}`);
+            }
+        }
+
+        async function confirmPaymentStaff() {
+            const orderId = Number(document.getElementById('quickConfirmOrderId').value);
+            if (!orderId) { alert('Vui lòng nhập Mã đơn hàng!'); return; }
+
+            const res = await api('counter/confirm-payment', 'POST', { MaDon: orderId });
+            if (res && res.success) {
+                alert(`✅ XÁC NHẬN THANH TOÁN THÀNH CÔNG (UC-08)!\nĐơn #${orderId} đã được ghi nhận đã thanh toán.`);
+            } else {
+                alert(res?.message || 'Xác nhận thất bại');
+            }
+        }
+
+        async function printCounterTicketStaff() {
+            const ticketId = Number(document.getElementById('quickPrintTicketId').value);
+            if (!ticketId) { alert('Vui lòng nhập Mã vé!'); return; }
+
+            const res = await api(`counter/print-ticket/${ticketId}`, 'POST');
+            if (res && res.success) {
+                alert(`🖨️ IN VÉ CỨNG TẠI QUẦY THÀNH CÔNG (UC-09)!\n- Mã vé: ${res.data.ticket_code}\n- Khách hàng: ${res.data.customer_name}\n- Ghế: ${res.data.seats.join(', ')}\n- Người in: ${res.data.printed_by}`);
+            } else {
+                alert(res?.message || 'In vé thất bại');
+            }
+        }
+
+        function openAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+
+        function quickLoginAccount(u) {
+            document.getElementById('modalUsername').value = u;
+            document.getElementById('modalPassword').value = '123456';
+            submitLogin();
+        }
+
+        async function submitLogin() {
+            const u = document.getElementById('modalUsername').value;
+            const p = document.getElementById('modalPassword').value;
+
+            const res = await api('auth/login', 'POST', { TenDangNhap: u, MatKhau: p });
+            if (res && res.success) {
+                authToken = res.data.token;
+                currentUser = res.data.user;
+                localStorage.setItem('token', authToken);
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                initAuth();
+                closeAuthModal();
+                updateWalletBalance();
+            } else {
+                alert(res?.message || 'Đăng nhập không thành công');
+            }
+        }
+    </script>
+</body>
+
+</html>

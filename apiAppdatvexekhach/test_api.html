@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Đặt Vé Xe Khách - API Tester & Documentation Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #818cf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 8px 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+
+        .brand-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-title p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .auth-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--card-border);
+        }
+
+        .role-chip {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-KhachHang { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .role-NhanVien { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        .role-Admin { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .role-None { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+
+        .container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 280px 1fr 420px;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            max-width: 1750px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            height: calc(100vh - 120px);
+            position: sticky;
+            top: 96px;
+            overflow-y: auto;
+        }
+
+        .nav-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-btn {
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+        }
+
+        /* Main Workspace */
+        .workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-header {
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .rule-badge {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        input, select, textarea {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 9px 12px;
+            color: white;
+            font-family: inherit;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 18px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-success { background: #059669; }
+        .btn-success:hover { background: #047857; }
+        .btn-danger { background: #dc2626; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-warning { background: #d97706; }
+        .btn-warning:hover { background: #b45309; }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.78rem;
+        }
+
+        /* Seat Layout Matrix */
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .seat-item {
+            padding: 12px 6px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            user-select: none;
+        }
+
+        .seat-item.ConTrong {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .seat-item.ConTrong:hover {
+            background: rgba(16, 185, 129, 0.3);
+            transform: scale(1.05);
+        }
+
+        .seat-item.selected {
+            background: var(--primary);
+            color: white;
+            border-color: #818cf8;
+            box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+        }
+
+        .seat-item.DaDat {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* JSON Response Inspector */
+        .inspector {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 120px);
+            position: sticky;
+            top: 96px;
+            overflow: hidden;
+        }
+
+        .inspector-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .inspector-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .status-200, .status-201 { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .status-400, .status-401, .status-403, .status-404, .status-409 { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+        .json-body {
+            flex: 1;
+            padding: 1.25rem;
+            background: #090d16;
+            color: #38bdf8;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .quick-accounts {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="brand-badge">BUS API</div>
+            <div class="brand-title">
+                <h1>Hệ Thống Quản Lý Đặt Vé Xe Khách</h1>
+                <p>RESTful API Test Dashboard & Schema Explorer (PHP 8.2 & MariaDB/MySQL)</p>
+            </div>
+        </div>
+
+        <div class="auth-bar">
+            <a href="app.html" class="btn btn-sm btn-success" style="text-decoration: none; margin-right: 6px;">🚀 Mở Giao Diện Người Dùng (Client App)</a>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Đang đăng nhập:</span>
+            <span id="currentUserName" style="font-weight: 600; font-size: 0.88rem;">Chưa đăng nhập</span>
+            <span id="currentUserRole" class="role-chip role-None">Khách</span>
+            <span id="currentUserWallet" style="font-size: 0.82rem; font-weight: 700; color: #34d399;">Ví: 0 đ</span>
+            <button class="btn btn-sm" onclick="logout()" style="background: rgba(255,255,255,0.1); margin-left: 8px;">Đăng xuất</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="nav-group">
+                <div class="nav-group-title">Xác thực & Tài khoản</div>
+                <button class="nav-btn active" onclick="switchTab('auth')">🔐 Đăng nhập / Đăng ký</button>
+                <button class="nav-btn" onclick="switchTab('wallet')">💰 Ví nội bộ (BR-01)</button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">Khách hàng trực tuyến</div>
+                <button class="nav-btn" onclick="switchTab('trips')">🔍 UC-01: Tra cứu chuyến</button>
+                <button class="nav-btn" onclick="switchTab('seats')">💺 UC-02 & 03: Chọn ghế & Đặt vé</button>
+                <button class="nav-btn" onclick="switchTab('my-tickets')">🎫 UC-04, 05, 06: Quản lý vé</button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">Nhân viên bán vé (Quầy)</div>
+                <button class="nav-btn" onclick="switchTab('counter')">🏪 UC-07, 08, 09: Bán vé tại quầy</button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">Nạp tiền tự động (BR-10)</div>
+                <button class="nav-btn" onclick="switchTab('bank-webhook')">⚡ UC-14: Webhook nạp tiền</button>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">Quản trị viên (Admin)</div>
+                <button class="nav-btn" onclick="switchTab('admin')">⚙️ UC-10 -> 13: Quản trị</button>
+            </div>
+        </aside>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="workspace">
+
+            <!-- TAB 1: AUTH -->
+            <div id="tab-auth" class="panel active">
+                <div class="panel-header">
+                    <h2 class="panel-title">Đăng Nhập / Đăng Ký Người Dùng</h2>
+                    <span class="rule-badge">Tài khoản & Ví tự động</span>
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Chọn nhanh tài khoản mẫu (Mật khẩu mặc định: <b>123456</b>):
+                </p>
+
+                <div class="quick-accounts">
+                    <button class="btn btn-sm btn-success" onclick="quickLogin('khachhang01')">👤 Khách hàng (An)</button>
+                    <button class="btn btn-sm btn-warning" onclick="quickLogin('nhanvien01')">💼 Nhân viên quầy (Ngân)</button>
+                    <button class="btn btn-sm btn-danger" onclick="quickLogin('admin01')">🛡️ Quản trị viên (Admin)</button>
+                </div>
+
+                <div class="form-grid" style="margin-top: 1.5rem;">
+                    <div class="form-group">
+                        <label>Tên đăng nhập</label>
+                        <input type="text" id="loginUsername" value="khachhang01">
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu</label>
+                        <input type="password" id="loginPassword" value="123456">
+                    </div>
+                </div>
+                <button class="btn" onclick="doLogin()">Đăng nhập ngay</button>
+            </div>
+
+            <!-- TAB 2: WALLET -->
+            <div id="tab-wallet" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Quản Lý Ví Nội Bộ (BR-01, BR-04)</h2>
+                    <span class="rule-badge">Số dư & Biến động</span>
+                </div>
+
+                <div style="background: rgba(79, 70, 229, 0.1); border: 1px solid rgba(79, 70, 229, 0.3); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Số dư khả dụng hiện tại:</div>
+                    <div id="walletDisplayAmount" style="font-size: 2rem; font-weight: 800; color: #34d399; margin: 4px 0;">0 đ</div>
+                    <div style="font-size: 0.8rem; color: #a5b4fc;">Cú pháp chuyển khoản nạp ví tự động: <b id="depositSyntax">NAPVI [ID]</b></div>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 1rem;">
+                    <button class="btn btn-sm" onclick="fetchWallet()">🔄 Làm mới số dư</button>
+                    <button class="btn btn-sm btn-success" onclick="fetchWalletTransactions()">📜 Xem lịch sử biến động</button>
+                </div>
+
+                <div id="walletTransactionsList"></div>
+            </div>
+
+            <!-- TAB 3: TRIPS SEARCH (UC-01) -->
+            <div id="tab-trips" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">UC-01: Tra Cứu & Lọc Chuyến Xe</h2>
+                    <span class="rule-badge">Tra cứu công khai</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Điểm đi</label>
+                        <input type="text" id="searchFrom" placeholder="Ví dụ: TP.HCM hoặc ID điểm đi">
+                    </div>
+                    <div class="form-group">
+                        <label>Điểm đến</label>
+                        <input type="text" id="searchTo" placeholder="Ví dụ: Đà Lạt">
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày đi (YYYY-MM-DD)</label>
+                        <input type="date" id="searchDate">
+                    </div>
+                </div>
+                <button class="btn" onclick="searchTrips()">🔍 Tìm kiếm chuyến xe</button>
+
+                <div id="tripsSearchResults" style="margin-top: 1.5rem;"></div>
+            </div>
+
+            <!-- TAB 4: SEAT MAP & BOOKING (UC-02, UC-03) -->
+            <div id="tab-seats" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">UC-02 & UC-03: Sơ Đồ Ghế & Đặt Vé Online</h2>
+                    <span class="rule-badge">BR-01, BR-02, BR-05</span>
+                </div>
+
+                <div style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Mã chuyến xe cần xem sơ đồ</label>
+                        <input type="number" id="selectedTripId" value="1">
+                    </div>
+                    <button class="btn" onclick="loadSeatMap()">Tải sơ đồ ghế</button>
+                </div>
+
+                <div id="tripSummaryInfo" style="margin-bottom: 1rem;"></div>
+
+                <div style="display: flex; gap: 15px; margin-bottom: 8px; font-size: 0.8rem;">
+                    <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; background: #34d399; border-radius: 3px;"></span> Còn trống</span>
+                    <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; background: #4f46e5; border-radius: 3px;"></span> Đang chọn</span>
+                    <span style="display: flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; background: #f87171; border-radius: 3px;"></span> Đã đặt</span>
+                </div>
+
+                <div id="seatMatrix" class="seat-grid"></div>
+
+                <div style="margin-top: 1.5rem; background: rgba(15, 23, 42, 0.6); padding: 1rem; border-radius: 12px; border: 1px solid var(--card-border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Các ghế đang chọn: <b id="selectedSeatLabels" style="color: white;">Chưa chọn</b></div>
+                            <div style="font-size: 1.1rem; font-weight: 700; color: #34d399; margin-top: 4px;">Tổng tiền: <span id="selectedTotalAmount">0 đ</span></div>
+                        </div>
+                        <button class="btn btn-success" onclick="doOnlineBooking()">⚡ Xác nhận đặt & Trừ ví</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: MY TICKETS (UC-04, 05, 06) -->
+            <div id="tab-my-tickets" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">UC-04, 05, 06: Quản Lý Vé Của Tôi</h2>
+                    <span class="rule-badge">BR-03: Đã in không được hủy | BR-04: Hoàn 50%</span>
+                </div>
+                <button class="btn btn-sm" onclick="loadMyTickets()">🔄 Tải danh sách vé</button>
+                <div id="myTicketsContainer" style="margin-top: 1rem;"></div>
+            </div>
+
+            <!-- TAB 6: COUNTER STAFF (UC-07, 08, 09) -->
+            <div id="tab-counter" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">UC-07, 08, 09: Bán Vé Tại Quầy (Nhân Viên)</h2>
+                    <span class="rule-badge">BR-06, BR-07, BR-08 (Guest)</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Mã chuyến</label>
+                        <input type="number" id="counterTripId" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Mã ghế (ngăn cách dấu phẩy, VD: 7, 8)</label>
+                        <input type="text" id="counterSeatIds" value="7">
+                    </div>
+                    <div class="form-group">
+                        <label>Tên khách hàng vãng lai</label>
+                        <input type="text" id="counterCustName" value="Khách Mua Tại Quầy">
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại khách</label>
+                        <input type="text" id="counterCustPhone" value="0912345678">
+                    </div>
+                    <div class="form-group">
+                        <label>Phương thức thanh toán</label>
+                        <select id="counterPaymentMethod">
+                            <option value="TienMat">Tiền mặt (Tự động xác nhận)</option>
+                            <option value="ChuyenKhoan">Chuyển khoản (Cần kiểm tra xác nhận)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-warning" onclick="doCounterBooking()">Tạo đơn tại quầy</button>
+                </div>
+
+                <div style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem;">
+                    <h3 style="font-size: 0.95rem; margin-bottom: 0.75rem;">Xác nhận thanh toán & In vé tại quầy:</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="number" id="confirmOrderId" placeholder="Nhập Mã Đơn (để xác nhận CK)" style="width: 250px;">
+                        <button class="btn btn-success btn-sm" onclick="confirmCounterPayment()">Xác nhận thanh toán (UC-08)</button>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <input type="number" id="printTicketId" placeholder="Nhập Mã Vé (để in vé cứng)" style="width: 250px;">
+                        <button class="btn btn-sm" onclick="printCounterTicket()">In vé cứng tại quầy (UC-09)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: BANK WEBHOOK (UC-14, BR-10) -->
+            <div id="tab-bank-webhook" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">UC-14: Nạp Tiền Tự Động Qua Ngân Hàng</h2>
+                    <span class="rule-badge">BR-10: Idempotent Chống Lặp</span>
+                </div>
+
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Giả lập Webhook biến động số dư từ ngân hàng (VietQR, SePay, Techcombank, v.v.):
+                </p>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Mã tham chiếu ngân hàng (Duy nhất)</label>
+                        <input type="text" id="bankRef" value="MB123456789">
+                    </div>
+                    <div class="form-group">
+                        <label>Nội dung chuyển khoản (Cú pháp NAPVI &lt;ID&gt;)</label>
+                        <input type="text" id="bankContent" value="NAPVI 3">
+                    </div>
+                    <div class="form-group">
+                        <label>Số tiền thực nhận (VNĐ)</label>
+                        <input type="number" id="bankAmount" value="500000">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-success" onclick="sendBankWebhook()">⚡ Gửi Webhook Nạp Tiền</button>
+                    <button class="btn" onclick="document.getElementById('bankRef').value = 'MB' + Math.floor(Math.random() * 900000 + 100000)">🎲 Tạo mã ngẫu nhiên</button>
+                </div>
+            </div>
+
+            <!-- TAB 8: ADMIN (UC-10, 11, 12, 13) -->
+            <div id="tab-admin" class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Bảng Quản Trị Hệ Thống (Admin)</h2>
+                    <span class="rule-badge">UC-10, 11, 12, 13</span>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 1.5rem;">
+                    <button class="btn btn-sm" onclick="adminList('users')">👥 Danh sách người dùng</button>
+                    <button class="btn btn-sm" onclick="adminList('trips')">🚌 Danh sách chuyến xe</button>
+                    <button class="btn btn-sm" onclick="adminList('buses')">🚐 Danh sách xe & ghế</button>
+                    <button class="btn btn-sm" onclick="adminList('locations')">📍 Danh mục trạm/bến</button>
+                    <button class="btn btn-sm" onclick="adminList('bank')">📊 Nhật ký GD ngân hàng</button>
+                </div>
+
+                <div id="adminDataContainer"></div>
+            </div>
+
+        </main>
+
+        <!-- JSON INSPECTOR -->
+        <aside class="inspector">
+            <div class="inspector-header">
+                <div class="inspector-title">
+                    <span>📡 Response</span>
+                    <span id="responseStatus" class="status-badge status-200">200 OK</span>
+                </div>
+                <span id="responseDuration" style="font-size: 0.75rem; color: var(--text-muted);">0 ms</span>
+            </div>
+            <pre id="jsonViewer" class="json-body">// Kết quả JSON API trả về sẽ hiển thị tại đây...</pre>
+        </aside>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + window.location.pathname.replace('test_api.html', 'api');
+        let authToken = localStorage.getItem('token') || '';
+        let currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+        let selectedSeats = [];
+        let currentTrip = null;
+
+        // Khởi tạo
+        window.onload = function() {
+            if (currentUser) {
+                updateAuthUI();
+                fetchWallet();
+            }
+        };
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            const panel = document.getElementById('tab-' + tabName);
+            if (panel) panel.classList.add('active');
+
+            event?.target?.classList?.add('active');
+
+            if (tabName === 'trips') searchTrips();
+            if (tabName === 'my-tickets') loadMyTickets();
+            if (tabName === 'wallet') fetchWallet();
+        }
+
+        async function apiRequest(endpoint, method = 'GET', data = null, requiresAuth = false) {
+            const startTime = performance.now();
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (authToken) {
+                headers['Authorization'] = 'Bearer ' + authToken;
+            }
+
+            const options = {
+                method: method,
+                headers: headers
+            };
+            if (data && (method === 'POST' || method === 'PUT')) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/${endpoint}`, options);
+                const duration = Math.round(performance.now() - startTime);
+                const json = await response.json();
+
+                // Cập nhật Inspector
+                const statusBadge = document.getElementById('responseStatus');
+                statusBadge.textContent = `${response.status} ${response.statusText || ''}`;
+                statusBadge.className = `status-badge status-${response.status}`;
+                document.getElementById('responseDuration').textContent = `${duration} ms`;
+                document.getElementById('jsonViewer').textContent = JSON.stringify(json, null, 2);
+
+                return json;
+            } catch (err) {
+                document.getElementById('responseStatus').textContent = 'ERROR';
+                document.getElementById('responseStatus').className = 'status-badge status-400';
+                document.getElementById('jsonViewer').textContent = JSON.stringify({ error: err.message }, null, 2);
+                return null;
+            }
+        }
+
+        function quickLogin(username) {
+            document.getElementById('loginUsername').value = username;
+            document.getElementById('loginPassword').value = '123456';
+            doLogin();
+        }
+
+        async function doLogin() {
+            const u = document.getElementById('loginUsername').value;
+            const p = document.getElementById('loginPassword').value;
+            const res = await apiRequest('auth/login', 'POST', { TenDangNhap: u, MatKhau: p });
+            if (res && res.success) {
+                authToken = res.data.token;
+                currentUser = res.data.user;
+                localStorage.setItem('token', authToken);
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                updateAuthUI();
+                alert('Đăng nhập thành công với vai trò: ' + currentUser.VaiTro);
+            } else {
+                alert(res?.message || 'Đăng nhập thất bại');
+            }
+        }
+
+        function logout() {
+            authToken = '';
+            currentUser = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            updateAuthUI();
+            alert('Đã đăng xuất');
+        }
+
+        function updateAuthUI() {
+            if (currentUser) {
+                document.getElementById('currentUserName').textContent = currentUser.HoTen;
+                const roleChip = document.getElementById('currentUserRole');
+                roleChip.textContent = currentUser.VaiTro;
+                roleChip.className = `role-chip role-${currentUser.VaiTro}`;
+                document.getElementById('currentUserWallet').textContent = `Ví: ${Number(currentUser.SoDu).toLocaleString('vi-VN')} đ`;
+            } else {
+                document.getElementById('currentUserName').textContent = 'Chưa đăng nhập';
+                document.getElementById('currentUserRole').textContent = 'Khách';
+                document.getElementById('currentUserRole').className = 'role-chip role-None';
+                document.getElementById('currentUserWallet').textContent = 'Ví: 0 đ';
+            }
+        }
+
+        async function fetchWallet() {
+            const res = await apiRequest('wallet/balance', 'GET');
+            if (res && res.success) {
+                document.getElementById('walletDisplayAmount').textContent = res.data.formatted_balance;
+                document.getElementById('depositSyntax').textContent = res.data.deposit_syntax;
+                if (currentUser) {
+                    currentUser.SoDu = res.data.balance;
+                    updateAuthUI();
+                }
+            }
+        }
+
+        async function fetchWalletTransactions() {
+            const res = await apiRequest('wallet/transactions', 'GET');
+            if (res && res.success) {
+                let html = '<table><thead><tr><th>Mã GD</th><th>Loại</th><th>Số tiền</th><th>Số dư trước</th><th>Số dư sau</th><th>Thời gian</th><th>Ghi chú</th></tr></thead><tbody>';
+                res.data.transactions.forEach(t => {
+                    const color = t.LoaiGiaoDich === 'NapTien' || t.LoaiGiaoDich === 'HoanTien' ? '#34d399' : '#f87171';
+                    html += `<tr>
+                        <td>#${t.MaGiaoDich}</td>
+                        <td><b>${t.LoaiGiaoDich}</b></td>
+                        <td style="color:${color}; font-weight:700;">${Number(t.SoTien).toLocaleString('vi-VN')} đ</td>
+                        <td>${Number(t.SoDuTruoc).toLocaleString('vi-VN')} đ</td>
+                        <td>${Number(t.SoDuSau).toLocaleString('vi-VN')} đ</td>
+                        <td>${t.ThoiGian}</td>
+                        <td style="font-size:0.78rem; color:#94a3b8;">${t.GhiChu || ''}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                document.getElementById('walletTransactionsList').innerHTML = html;
+            }
+        }
+
+        async function searchTrips() {
+            const from = document.getElementById('searchFrom').value;
+            const to = document.getElementById('searchTo').value;
+            const date = document.getElementById('searchDate').value;
+            let query = [];
+            if (from) query.push(`diem_di=${encodeURIComponent(from)}`);
+            if (to) query.push(`diem_den=${encodeURIComponent(to)}`);
+            if (date) query.push(`ngay_di=${encodeURIComponent(date)}`);
+
+            const res = await apiRequest('trips/search?' + query.join('&'), 'GET');
+            if (res && res.success) {
+                let html = '<table><thead><tr><th>Mã</th><th>Tuyến xe</th><th>Xe</th><th>Giờ đi</th><th>Giá vé</th><th>Còn trống</th><th>Thao tác</th></tr></thead><tbody>';
+                res.data.trips.forEach(t => {
+                    html += `<tr>
+                        <td><b>#${t.MaChuyen}</b></td>
+                        <td><b>${t.TenTuyen}</b><br><span style="font-size:0.75rem; color:#94a3b8;">${t.TenDiemDi} ➔ ${t.TenDiemDen}</span></td>
+                        <td>${t.TenXe} (${t.BienSo})</td>
+                        <td>${t.ThoiGianDi}</td>
+                        <td style="color:#34d399; font-weight:700;">${Number(t.GiaVe).toLocaleString('vi-VN')} đ</td>
+                        <td><span class="status-badge status-200">${t.SoGheConTrong} / ${t.SoLuongGhe}</span></td>
+                        <td><button class="btn btn-sm" onclick="selectTripForSeats(${t.MaChuyen})">Chọn ghế</button></td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                document.getElementById('tripsSearchResults').innerHTML = html;
+            }
+        }
+
+        function selectTripForSeats(tripId) {
+            document.getElementById('selectedTripId').value = tripId;
+            switchTab('seats');
+            loadSeatMap();
+        }
+
+        async function loadSeatMap() {
+            const tripId = document.getElementById('selectedTripId').value;
+            selectedSeats = [];
+            updateSelectedSummary();
+
+            const res = await apiRequest(`trips/${tripId}/seats`, 'GET');
+            if (res && res.success) {
+                currentTrip = res.data.trip;
+                document.getElementById('tripSummaryInfo').innerHTML = `
+                    <div style="background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); font-size:0.85rem;">
+                        <b>Chuyến #${currentTrip.MaChuyen}: ${currentTrip.TenTuyen}</b> | Biển số: <b>${currentTrip.BienSo}</b> | Giá vé cố định: <b style="color:#34d399;">${Number(currentTrip.GiaVe).toLocaleString('vi-VN')} đ</b>
+                    </div>
+                `;
+
+                const matrix = document.getElementById('seatMatrix');
+                matrix.innerHTML = '';
+                res.data.seats.forEach(s => {
+                    const div = document.createElement('div');
+                    div.className = `seat-item ${s.TrangThaiDat}`;
+                    div.textContent = s.SoGhe;
+                    div.title = `Ghế ${s.SoGhe} - ${s.TrangThaiDat}`;
+                    
+                    if (s.TrangThaiDat === 'ConTrong') {
+                        div.onclick = () => toggleSeatSelect(s, div);
+                    }
+                    matrix.appendChild(div);
+                });
+            }
+        }
+
+        function toggleSeatSelect(seat, element) {
+            const idx = selectedSeats.findIndex(s => s.MaGhe === seat.MaGhe);
+            if (idx > -1) {
+                selectedSeats.splice(idx, 1);
+                element.classList.remove('selected');
+            } else {
+                selectedSeats.push(seat);
+                element.classList.add('selected');
+            }
+            updateSelectedSummary();
+        }
+
+        function updateSelectedSummary() {
+            const labels = selectedSeats.map(s => s.SoGhe).join(', ');
+            document.getElementById('selectedSeatLabels').textContent = labels || 'Chưa chọn';
+            const price = currentTrip ? Number(currentTrip.GiaVe) : 0;
+            const total = price * selectedSeats.length;
+            document.getElementById('selectedTotalAmount').textContent = `${total.toLocaleString('vi-VN')} đ`;
+        }
+
+        async function doOnlineBooking() {
+            if (!currentUser) {
+                alert('Vui lòng đăng nhập trước khi đặt vé!');
+                switchTab('auth');
+                return;
+            }
+            if (selectedSeats.length === 0) {
+                alert('Vui lòng chọn ít nhất 1 ghế trống!');
+                return;
+            }
+
+            const payload = {
+                MaChuyen: Number(document.getElementById('selectedTripId').value),
+                DanhSachMaGhe: selectedSeats.map(s => s.MaGhe)
+            };
+
+            const res = await apiRequest('bookings/book', 'POST', payload);
+            if (res && res.success) {
+                alert(`🎉 ${res.message}\nMã vé: ${res.data.ticket_code}`);
+                fetchWallet();
+                loadSeatMap();
+            } else {
+                alert(`❌ ${res?.message || 'Đặt vé thất bại'}`);
+            }
+        }
+
+        async function loadMyTickets() {
+            const res = await apiRequest('tickets/my-tickets', 'GET');
+            if (res && res.success) {
+                let html = '<table><thead><tr><th>Mã vé</th><th>Chuyến xe</th><th>Ghế đã mua</th><th>Tổng tiền</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>';
+                res.data.tickets.forEach(t => {
+                    const isPrinted = t.TrangThaiVe === 'DaIn';
+                    const isCancelled = t.TrangThaiVe === 'DaHuy';
+                    const statusClass = isCancelled ? 'status-400' : (isPrinted ? 'status-201' : 'status-200');
+
+                    html += `<tr>
+                        <td><b>${t.MaVeHienThi}</b><br><span style="font-size:0.75rem; color:#94a3b8;">Đơn: ${t.MaDonHienThi}</span></td>
+                        <td><b>${t.TenTuyen}</b><br><span style="font-size:0.75rem; color:#94a3b8;">${t.ThoiGianDi}</span></td>
+                        <td><b style="color:#818cf8;">${t.DanhSachGhe || ''}</b></td>
+                        <td style="color:#34d399; font-weight:700;">${Number(t.TongTien).toLocaleString('vi-VN')} đ</td>
+                        <td><span class="status-badge ${statusClass}">${t.TrangThaiVe}</span></td>
+                        <td>
+                            <div style="display:flex; gap:6px;">
+                                ${!isCancelled ? `<button class="btn btn-sm btn-success" onclick="printTicket(${t.MaVe})">🖨️ In vé</button>` : ''}
+                                ${!isPrinted && !isCancelled ? `<button class="btn btn-sm btn-danger" onclick="cancelTicket(${t.MaVe})">❌ Hủy (-50%)</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+                document.getElementById('myTicketsContainer').innerHTML = html;
+            }
+        }
+
+        async function printTicket(ticketId) {
+            const res = await apiRequest(`tickets/${ticketId}/print`, 'POST');
+            if (res && res.success) {
+                alert(`🖨️ In vé thành công!\nMã vé: ${res.data.ticket_code}\nDanh sách ghế: ${res.data.seats.join(', ')}\n(Lưu ý: Vé đã in sẽ không thể hủy hoàn tiền theo BR-03)`);
+                loadMyTickets();
+            } else {
+                alert(res?.message || 'In vé thất bại');
+            }
+        }
+
+        async function cancelTicket(ticketId) {
+            if (!confirm('Bạn có chắc chắn muốn hủy vé này? Theo quy tắc BR-04, bạn sẽ được hoàn lại 50% giá trị vé vào ví nội bộ.')) return;
+            const res = await apiRequest(`tickets/${ticketId}/cancel`, 'POST');
+            if (res && res.success) {
+                alert(`✅ ${res.message}\nSố tiền hoàn: ${Number(res.data.refund_amount).toLocaleString('vi-VN')} đ`);
+                fetchWallet();
+                loadMyTickets();
+            } else {
+                alert(`❌ ${res?.message || 'Hủy vé thất bại'}`);
+            }
+        }
+
+        async function doCounterBooking() {
+            const tripId = Number(document.getElementById('counterTripId').value);
+            const seatIdsStr = document.getElementById('counterSeatIds').value;
+            const seatIds = seatIdsStr.split(',').map(s => Number(s.trim())).filter(s => s > 0);
+
+            const payload = {
+                MaChuyen: tripId,
+                DanhSachMaGhe: seatIds,
+                TenKhachHang: document.getElementById('counterCustName').value,
+                SoDienThoaiKhach: document.getElementById('counterCustPhone').value,
+                PhuongThucThanhToan: document.getElementById('counterPaymentMethod').value
+            };
+
+            const res = await apiRequest('counter/create-booking', 'POST', payload);
+            if (res && res.success) {
+                alert(`🎉 Tạo đơn tại quầy thành công!\nMã đơn: ${res.data.booking_code}\nMã vé: ${res.data.ticket_code}\nTrạng thái thanh toán: ${res.data.payment_status}`);
+                document.getElementById('confirmOrderId').value = res.data.booking_id;
+                document.getElementById('printTicketId').value = res.data.ticket_id;
+            } else {
+                alert(`❌ ${res?.message || 'Tạo đơn quầy thất bại'}`);
+            }
+        }
+
+        async function confirmCounterPayment() {
+            const orderId = Number(document.getElementById('confirmOrderId').value);
+            if (!orderId) { alert('Vui lòng nhập Mã đơn'); return; }
+            const res = await apiRequest('counter/confirm-payment', 'POST', { MaDon: orderId });
+            if (res && res.success) {
+                alert(`✅ ${res.message}`);
+            } else {
+                alert(`❌ ${res?.message || 'Xác nhận thanh toán thất bại'}`);
+            }
+        }
+
+        async function printCounterTicket() {
+            const ticketId = Number(document.getElementById('printTicketId').value);
+            if (!ticketId) { alert('Vui lòng nhập Mã vé'); return; }
+            const res = await apiRequest(`counter/print-ticket/${ticketId}`, 'POST');
+            if (res && res.success) {
+                alert(`🖨️ In vé cứng tại quầy thành công!\nMã vé: ${res.data.ticket_code}\nKhách: ${res.data.customer_name}\nGhế: ${res.data.seats.join(', ')}`);
+            } else {
+                alert(`❌ ${res?.message || 'In vé thất bại'}`);
+            }
+        }
+
+        async function sendBankWebhook() {
+            const payload = {
+                MaThamChieuNganHang: document.getElementById('bankRef').value,
+                NoiDungChuyenKhoan: document.getElementById('bankContent').value,
+                SoTien: Number(document.getElementById('bankAmount').value)
+            };
+
+            const res = await apiRequest('bank/deposit', 'POST', payload);
+            if (res && res.success) {
+                alert(`⚡ Nạp tiền tự động thành công!\nCộng: ${Number(res.data.amount_added).toLocaleString('vi-VN')} đ cho ${res.data.customer_name}\nSố dư mới: ${Number(res.data.new_balance).toLocaleString('vi-VN')} đ`);
+                fetchWallet();
+            } else {
+                alert(`⚠️ ${res?.message || 'Xử lý thất bại'}`);
+            }
+        }
+
+        async function adminList(type) {
+            let endpoint = '';
+            if (type === 'users') endpoint = 'admin/users';
+            if (type === 'trips') endpoint = 'admin/trips';
+            if (type === 'buses') endpoint = 'admin/buses';
+            if (type === 'locations') endpoint = 'admin/locations';
+            if (type === 'bank') endpoint = 'admin/bank-transactions';
+
+            const res = await apiRequest(endpoint, 'GET');
+            if (res && res.success) {
+                let html = `<h3>Dữ liệu ${type.toUpperCase()}</h3>`;
+                html += `<div style="max-height: 400px; overflow-y: auto;"><table><thead><tr>`;
+                const keys = Object.keys(res.data[0] || {});
+                keys.forEach(k => html += `<th>${k}</th>`);
+                html += `</tr></thead><tbody>`;
+                res.data.forEach(row => {
+                    html += `<tr>`;
+                    keys.forEach(k => html += `<td>${row[k]}</td>`);
+                    html += `</tr>`;
+                });
+                html += `</tbody></table></div>`;
+                document.getElementById('adminDataContainer').innerHTML = html;
+            } else {
+                alert(res?.message || 'Lấy dữ liệu quản trị thất bại (Kiểm tra quyền Admin)');
+            }
+        }
+    </script>
+</body>
+</html>

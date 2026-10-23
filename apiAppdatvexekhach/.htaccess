@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Handle Authorization Header in XAMPP / Apache
+<IfModule mod_setenvif.c>
+    SetEnvIfNoCase Authorization "Bearer (.*)" HTTP_AUTHORIZATION=$0
+</IfModule>
